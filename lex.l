@@ -36,9 +36,10 @@ void count(void);
 "for"			{ count(); return(FOR); }
 "goto"			{ count(); return(GOTO); }
 "if"			{ count(); return(IF); }
-"_Imaginary"		{ count(); return(IMAGINARY); }
+"_Imaginary"	{ count(); return(IMAGINARY); }
 "inline"		{ count(); return(INLINE); }
 "int"			{ count(); return(INT); }
+"include"		{ count(); return(INCLUDE); }
 "long"			{ count(); return(LONG); }
 "register"		{ count(); return(REGISTER); }
 "restrict"		{ count(); return(RESTRICT); }
@@ -72,6 +73,7 @@ L?'(\\.|[^\\'\n])+'	{ count(); return(CONSTANT); }
 
 
 L?\"(\\.|[^\\"\n])*\"	{ count(); return(STRING_LITERAL); }
+{L}+(.{L})*        	{ count(); return(FILE_NAME); }
 
 "..."			{ count(); return(ELLIPSIS); }
 ">>="			{ count(); return(RIGHT_ASSIGN); }
@@ -95,10 +97,13 @@ L?\"(\\.|[^\\"\n])*\"	{ count(); return(STRING_LITERAL); }
 ">="			{ count(); return(GE_OP); }
 "=="			{ count(); return(EQ_OP); }
 "!="			{ count(); return(NE_OP); }
-";"			{ count(); return(';'); }
+"\""		    { count(); return(DOUBLE_QUOTE); }
+"#"		        { count(); return(HASH); }
+";"			    { count(); return(';'); }
 ("{"|"<%")		{ count(); return('{'); }
 ("}"|"%>")		{ count(); return('}'); }
 ","			{ count(); return(','); }
+"."			{ count(); return(DOT); }
 ":"			{ count(); return(':'); }
 "="			{ count(); return('='); }
 "("			{ count(); return('('); }
