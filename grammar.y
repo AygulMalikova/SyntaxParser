@@ -13,8 +13,7 @@
 %token XOR_ASSIGN OR_ASSIGN TYPE_NAME DOUBLE_QUOTE HASH DOT
 
 %token TYPEDEF EXTERN STATIC AUTO REGISTER INLINE RESTRICT
-%token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
-%token BOOL COMPLEX IMAGINARY
+%token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID BOOL
 %token STRUCT UNION ENUM ELLIPSIS
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
@@ -24,9 +23,12 @@
 %%
 //rules
 
+//include
 compilation_unit
     : include_files
+    | variable_declaration
 	| compilation_unit include_files
+	| compilation_unit variable_declaration
 	;
 
 include_files
@@ -37,6 +39,37 @@ file
     : '<' FILE_NAME '>'                         //#include <header.h>;
     | DOUBLE_QUOTE FILE_NAME DOUBLE_QUOTE       //#include "header.h";
     ;
+
+//var declaration
+variable_declaration
+    : inline_initial_declaration ';'
+    ;
+
+inline_initial_declaration
+    : initial_declaration
+    | inline_initial_declaration ',' initial_declaration
+    ;
+
+initial_declaration
+	: types IDENTIFIER
+	| types IDENTIFIER assignment
+	;
+
+assignment
+    : '=' IDENTIFIER
+
+types
+	: VOID
+	| CHAR
+	| SHORT
+	| INT
+	| LONG
+	| FLOAT
+	| DOUBLE
+	| SIGNED
+	| UNSIGNED
+	| BOOL
+	;
 
 
 %%
