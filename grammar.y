@@ -22,6 +22,7 @@
 %token RBRACE      //  }
 %token LPAREN      //  (
 %token RPAREN      //  )
+%token SEMICOLON   //  ;
 
 %start compilation_unit
 
@@ -37,7 +38,7 @@ compilation_unit
 	;
 
 include_files
-	: HASH INCLUDE file ';'
+	: HASH INCLUDE file SEMICOLON
 	;
 
 file
@@ -47,7 +48,7 @@ file
 
 //var declaration
 variable_declaration
-    : inline_initial_declaration ';'
+    : inline_initial_declaration SEMICOLON
     ;
 
 inline_initial_declaration
@@ -84,6 +85,10 @@ Statement
 	:
 	;
 
+Expression
+	:
+	;
+
 else_body
 	:
 	| ELSE Statement
@@ -96,6 +101,30 @@ if
 while
 	: WHILE LPAREN Relation RPAREN Statement
 	;
+
+ArgumentList
+    :                    Expression
+    | ArgumentList COMMA Expression
+    ;
+
+for_init
+	:
+	| initial_declaration
+	| zaglushka
+	;
+
+for_condition
+	:
+	| Relation
+	;
+
+for_actions
+	:
+	| ArgumentList
+	;
+
+for
+	: FOR LPAREN for_init SEMICOLON for_condition SEMICOLON for_actions RPAREN Statement
 
 %%
 //subroutines
