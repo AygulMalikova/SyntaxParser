@@ -18,6 +18,11 @@
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
+%token LBRACE      //  {
+%token RBRACE      //  }
+%token LPAREN      //  (
+%token RPAREN      //  )
+
 %start compilation_unit
 
 %%
@@ -71,6 +76,22 @@ types
 	| BOOL
 	;
 
+Relation
+	:
+	;
+
+Statement
+	:
+	;
+
+else_body
+	:
+	| ELSE Statement
+	;
+
+if
+	: IF LPAREN Relation RPAREN Statement else_body
+	;
 
 %%
 //subroutines
