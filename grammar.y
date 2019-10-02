@@ -93,6 +93,10 @@ if
 	: IF LPAREN Relation RPAREN Statement else_body
 	;
 
+while
+	: WHILE LPAREN Relation RPAREN Statement
+	;
+
 %%
 //subroutines
 
