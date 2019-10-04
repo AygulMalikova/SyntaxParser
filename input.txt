@@ -1,1 +1,6 @@
-int arr = af;
+#include <akfg.h>;
+#include "123.h";
+
+int arr = 8435.34;
+for (int i = 4;;)
+

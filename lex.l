@@ -1,11 +1,21 @@
 D			[0-9]
 L			[a-zA-Z_]
+H			[a-fA-F0-9]
+E			([Ee][+-]?{D}+)
+P                       ([Pp][+-]?{D}+)
+FS			(f|F|l|L)
+IS                      ((u|U)|(u|U)?(l|L|ll|LL)|(l|L|ll|LL)(u|U))
 
 %{
 #include <stdio.h>
 #include "y.tab.h"
 
+extern int sym_type(const char *);  /* returns type from symbol table */
+
+#define sym_type(identifier) IDENTIFIER /* with no symbol table, fake it */
+
 void count(void);
+static int check_type();
 %}
 
 %%
@@ -47,8 +57,19 @@ int			{ count(); return(INT); }
 "void"			{ count(); return(VOID); }
 "while"			{ count(); return(WHILE); }
 
+({L}|{D})+(\.({L}|{D})+)+ { count(); return(FILE_NAME); }
 {L}({L}|{D})*		{ count(); return(IDENTIFIER); }
-({L}|{D})+(.{L}|{D})*       	{ count(); return(FILE_NAME); }
+
+0[xX]{H}+{IS}?		{ count(); return(CONSTANT); }
+0[0-7]*{IS}?		{ count(); return(CONSTANT); }
+[1-9]{D}*{IS}?		{ count(); return(CONSTANT); }
+L?'(\\.|[^\\'\n])+'	{ count(); return(CONSTANT); }
+
+{D}+{E}{FS}?		{ count(); return(CONSTANT); }
+((([0-9]+)((e|E)(\+|-)?[0-9]+))|(([0-9]*\.[0-9]+)|([0-9]+\.))((e|E)(\+|-)?[0-9]+)?)(f|F|l|L)? { count(); return(CONSTANT); }
+0[xX]{H}+{P}{FS}?	{ count(); return(CONSTANT); }
+0[xX]{H}*\.{H}+{P}?{FS}?     { count(); return(CONSTANT); }
+0[xX]{H}+\.{H}*{P}?{FS}?     { count(); return(CONSTANT); }
 
 "..."			{ count(); return(ELLIPSIS); }
 ">>="			{ count(); return(RIGHT_ASSIGN); }
@@ -126,4 +147,17 @@ void count(void)
 			column++;
 
 	ECHO;
+}
+
+static int check_type(void)
+{
+    switch (sym_type(yytext))
+    {
+    case TYPEDEF_NAME:                /* previously defined */
+        return TYPEDEF_NAME;
+    case ENUMERATION_CONSTANT:        /* previously defined */
+        return ENUMERATION_CONSTANT;
+    default:                          /* includes undefined */
+        return IDENTIFIER;
+    }
 }
