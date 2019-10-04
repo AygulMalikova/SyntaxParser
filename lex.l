@@ -70,6 +70,7 @@ L?'(\\.|[^\\'\n])+'	{ count(); return(CONSTANT); }
 0[xX]{H}+{P}{FS}?	{ count(); return(CONSTANT); }
 0[xX]{H}*\.{H}+{P}?{FS}?     { count(); return(CONSTANT); }
 0[xX]{H}+\.{H}*{P}?{FS}?     { count(); return(CONSTANT); }
+'.+'                { count(); return(CHAR); }
 
 "..."			{ count(); return(ELLIPSIS); }
 ">>="			{ count(); return(RIGHT_ASSIGN); }
