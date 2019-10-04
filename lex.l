@@ -29,7 +29,7 @@ void count(void);
 "goto"			{ count(); return(GOTO); }
 "if"			{ count(); return(IF); }
 "inline"		{ count(); return(INLINE); }
-"int"			{ count(); return(INT); }
+int			{ count(); return(INT); }
 "include"		{ count(); return(INCLUDE); }
 "long"			{ count(); return(LONG); }
 "register"		{ count(); return(REGISTER); }

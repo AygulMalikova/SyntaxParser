@@ -910,3 +910,7 @@ _deps
 *.exe
 *.out
 *.app
+
+lex.yy.c
+y.tab.c
+y.tab.h

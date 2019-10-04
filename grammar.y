@@ -98,11 +98,11 @@ else_body
 	;
 
 if
-	: IF LPAREN Relation RPAREN Statement else_body
+	: IF '(' Relation ')' Statement else_body
 	;
 
 while
-	: WHILE LPAREN Relation RPAREN Statement
+	: WHILE '(' Relation ')' Statement
 	;
 
 zaglushka
