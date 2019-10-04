@@ -1,3 +1,5 @@
 #include <header.h.h>;
 #include <123.h>;
 
+for (;;)
+int abc = af;

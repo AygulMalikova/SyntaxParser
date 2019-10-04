@@ -114,7 +114,11 @@ extern int yydebug;
     GOTO = 320,
     CONTINUE = 321,
     BREAK = 322,
-    RETURN = 323
+    RETURN = 323,
+    LBRACE = 324,
+    RBRACE = 325,
+    LPAREN = 326,
+    RPAREN = 327
   };
 #endif
 /* Tokens.  */
@@ -184,6 +188,10 @@ extern int yydebug;
 #define CONTINUE 321
 #define BREAK 322
 #define RETURN 323
+#define LBRACE 324
+#define RBRACE 325
+#define LPAREN 326
+#define RPAREN 327
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
