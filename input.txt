@@ -8,10 +8,20 @@ int k = 1;
 char a = 'a';
 a = 'b';
 
+int *p;
+char *str = NULL;
+char *str = "Hello";
+char *str = "123Hello";
+ip = &var;
+int **ptr1 = &ptr2;
+
 int array[100];
 int array[] = {7, 8, 134};
 int array[5] = {0};
 int array[4] = {'c', 'd', '-', '%'};
+array1[4] = 2;
+array2[n] = NULL;
+array2[n] = "String";
 
 void maxnum(int a, int b){
   int max = b;

@@ -5,7 +5,7 @@
 
 //definitions
 
-%token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF INCLUDE ENUMERATION_CONSTANT FILE_NAME CHAR INTEGER_CONSTANT
+%token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF INCLUDE ENUMERATION_CONSTANT FILE_NAME CHAR INTEGER_CONSTANT STRING
 %token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
 %token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
@@ -49,6 +49,7 @@ file
 //var declaration
 variable_declaration
     : inline_initial_declaration ';'
+    | ArrayUsage
     ;
 
 inline_initial_declaration
@@ -58,18 +59,23 @@ inline_initial_declaration
 
 initial_declaration
 	: types IDENTIFIER assignment       // primitives
-	| types array_declaration
+	| types '*' IDENTIFIER assignment   // primitive pointers
+	| types '*' '*' IDENTIFIER assignment   // double pointers
+	| types array_declaration           // arrays
 	;
 
 array_declaration
     : IDENTIFIER '[' ']' list_initializer
-    | IDENTIFIER '[' INTEGER_CONSTANT ']'
+    | IDENTIFIER '[' INTEGER_CONSTANT ']'                       // int array[10];
     | IDENTIFIER '[' INTEGER_CONSTANT ']' list_initializer
+    | IDENTIFIER '[' IDENTIFIER ']'                             // int n = 10; int array[n];
+    | IDENTIFIER '[' IDENTIFIER ']' list_initializer
     ;
 
-//Aygul ToDO
 ArrayUsage
-    :
+    : types array_declaration
+    | IDENTIFIER '[' INTEGER_CONSTANT ']' assignment
+    | IDENTIFIER '[' IDENTIFIER ']' assignment                  // int n = 10; array[n] = 10;
     ;
 
 list_initializer
@@ -92,9 +98,13 @@ comma_separation
 
 assignment
     :
+    | '=' 'NULL'
     | '=' literal
     | '=' CHAR
-    | '=' IDENTIFIER //check
+    | '=' DOUBLE_QUOTE STRING DOUBLE_QUOTE      // "123Hello"
+    | '=' DOUBLE_QUOTE IDENTIFIER DOUBLE_QUOTE  //  "Hello"
+    | '=' IDENTIFIER
+    | '=' '&' IDENTIFIER                        // address
     ;
 
 types

@@ -39,7 +39,7 @@ static int check_type();
 "goto"			{ count(); return(GOTO); }
 "if"			{ count(); return(IF); }
 "inline"		{ count(); return(INLINE); }
-int			{ count(); return(INT); }
+int			    { count(); return(INT); }
 "include"		{ count(); return(INCLUDE); }
 "long"			{ count(); return(LONG); }
 "register"		{ count(); return(REGISTER); }
@@ -57,6 +57,7 @@ int			{ count(); return(INT); }
 "void"			{ count(); return(VOID); }
 "while"			{ count(); return(WHILE); }
 
+
 ({L}|{D})+(\.({L}|{D})+)+ { count(); return(FILE_NAME); }
 {L}({L}|{D})*		{ count(); return(IDENTIFIER); }
 
@@ -71,6 +72,8 @@ L?'(\\.|[^\\'\n])+'	{ count(); return(CONSTANT); }
 0[xX]{H}+\.{H}*{P}?{FS}?     { count(); return(CONSTANT); }
 '.+'                { count(); return(CHAR); }
 [1-9]{D}*{IS}?    { count(); return(INTEGER_CONSTANT); }
+({L}|{D})+                { count(); return(STRING); }
+
 
 "..."			{ count(); return(ELLIPSIS); }
 ">>="			{ count(); return(RIGHT_ASSIGN); }
