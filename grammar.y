@@ -67,6 +67,11 @@ array_declaration
     | IDENTIFIER '[' INTEGER_CONSTANT ']' list_initializer
     ;
 
+//Aygul ToDO
+ArrayUsage
+    :
+    ;
+
 list_initializer
     : '=' '{' comma_separation '}'
     | designated_initializer
@@ -89,6 +94,7 @@ assignment
     :
     | '=' literal
     | '=' CHAR
+    | '=' IDENTIFIER //check
     ;
 
 types
@@ -105,11 +111,15 @@ types
 	;
 
 FunctionDef
-    : types IDENTIFIER LPAREN parameter_list RPAREN LBRACE FunctBody RBRACE
+    : types IDENTIFIER '(' parameter_list ')' '{' FunctionBody Return '}'
+    | VOID IDENTIFIER '(' parameter_list ')' '{' FunctionBody '}'
+    | types IDENTIFIER '(' VOID ')' '{' FunctionBody Return'}'
+    | types IDENTIFIER '('  ')' '{' FunctionBody Return'}'
+    ;
 
-FunctionCall //проверить Лиза
-    : IDENTIFIER LPAREN args_list  RPAREN ';'
-    | IDENTIFIER LPAREN RPAREN ';'
+FunctionCall //check
+    : IDENTIFIER '(' args_list ')' ';'
+    | IDENTIFIER '(' ')' ';'
     ;
 
 args_list
@@ -118,24 +128,61 @@ args_list
     ;
 
 parameter_list
-    : parameter_list COMMA arg
+    : parameter_list ',' arg
     | arg
     ;
 
 arg
     : types IDENTIFIER
 
-FuctionBody
+FunctionBody
 	: variable_declaration ';'
+	| Expression';'
+	| if ';'
 	| for ';'
+	| while ';'
 	| FunctionCall ';'
     | ArrayUsage ';'
-    | Type ArrayUsage ';'
+    | types ArrayUsage ';'
     | StructStmt ';'
+    | Return ';'
+    | FunctionBody
+    ;
+
+Return
+    : RETURN '(' IDENTIFIER ')' ';'
+    | RETURN IDENTIFIER ';'
+    | RETURN value ';'
+    | RETURN '(' value ')' ';'
+    | RETURN ';'
+    ;
+
+value
+	: CHAR
+	| SHORT
+	| INT
+	| LONG
+	| FLOAT
+	| DOUBLE
+	| SIGNED
+	| UNSIGNED
+	| BOOL
+	| pointer
+	| address
+	;
 
 literal
     : CONSTANT
     | INTEGER_CONSTANT
+    ;
+
+//TODO
+address
+    :
+    ;
+//TODO
+pointer
+    :
     ;
 
 Relation
@@ -143,13 +190,17 @@ Relation
 	;
 
 Statement
-    : variable_declaration ';'
+	: variable_declaration ';'
+	| Expression
+	| if ';'
 	| for ';'
+	| while ';'
 	| FunctionCall ';'
     | ArrayUsage ';'
-    | Type ArrayUsage ';'
+    | types ArrayUsage ';'
     | StructStmt ';'
     | FunctionDef ';'
+    | Statement
     ;
 
 
@@ -158,9 +209,9 @@ StructStmt
     :
     ;
 
+//Check
 Expression
-	:
-	;
+	: IDENTIFIER assignment ';'
 
 else_body
 	:

@@ -2,11 +2,27 @@
 #include "123.h";
 
 int d = 1234;
+int k = 1;
+
+
 char a = 'a';
+a = 'b';
 
 int array[100];
 int array[] = {7, 8, 134};
 int array[5] = {0};
 int array[4] = {'c', 'd', '-', '%'};
+
+void maxnum(int a, int b){
+  int max = b;
+}
+
+int main()
+{
+  int a;
+  return 0;
+}
+
+
 
 for (int i = 4;;)
