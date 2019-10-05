@@ -5,7 +5,7 @@
 
 //definitions
 
-%token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF INCLUDE ENUMERATION_CONSTANT FILE_NAME
+%token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF INCLUDE ENUMERATION_CONSTANT FILE_NAME CHAR INTEGER_CONSTANT
 %token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
 %token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
@@ -57,14 +57,38 @@ inline_initial_declaration
     ;
 
 initial_declaration
-	: types IDENTIFIER assignment
+	: types IDENTIFIER assignment       // primitives
+	| types array_declaration
 	;
 
+array_declaration
+    : IDENTIFIER '[' ']' list_initializer
+    | IDENTIFIER '[' INTEGER_CONSTANT ']'
+    | IDENTIFIER '[' INTEGER_CONSTANT ']' list_initializer
+    ;
+
+list_initializer
+    : '=' '{' comma_separation '}'
+    | designated_initializer
+    ;
+
+designated_initializer
+    : '=' '{' '[' CONSTANT ' .'' .'' .' CONSTANT ']' '=' CONSTANT '}'
+    | '=' '{' '[' CONSTANT ' .'' .'' .' CONSTANT ']' '=' CHAR '}'
+    ;
+
+comma_separation
+    :
+    | literal
+    | CHAR
+    | comma_separation ',' literal
+    | comma_separation ',' CHAR
+    ;
 
 assignment
     :
-    | '=' IDENTIFIER
-    | '=' CONSTANT
+    | '=' literal
+    | '=' CHAR
     ;
 
 types
@@ -110,6 +134,10 @@ FuctionBody
     | ArrayUsage ';'
     | Type ArrayUsage ';'
     | StructStmt ';'
+
+literal
+    : CONSTANT
+    | INTEGER_CONSTANT
     ;
 
 Relation
@@ -126,10 +154,6 @@ Statement
     | FunctionDef ';'
     ;
 
-//AYGUL ToDO
-ArrayUsage
-    :
-    ;
 
 //Lisa ToDO
 StructStmt
