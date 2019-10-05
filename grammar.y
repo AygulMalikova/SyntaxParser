@@ -115,13 +115,11 @@ FunctionCall //проверить Лиза
 args_list
     : args_list ',' IDENTIFIER
     | IDENTIFIER
-    | IDENTIFIER assignment //приравнять парам функции чему-то - ТАК МОЖНО?
     ;
 
 parameter_list
     : parameter_list COMMA arg
     | arg
-    | arg assignment //уточнить может ли быть назначение параметра в Си ТАК МОЖНО?
     ;
 
 arg
@@ -145,7 +143,7 @@ Relation
 	;
 
 Statement
-	: variable_declaration ';'
+    : variable_declaration ';'
 	| for ';'
 	| FunctionCall ';'
     | ArrayUsage ';'
