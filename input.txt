@@ -1,6 +1,12 @@
 #include <akfg.h>;
 #include "123.h";
 
-int arr = 8435.34;
-for (int i = 4;;)
+int d = 1234;
+char a = 'a';
 
+int array[100];
+int array[] = {7, 8, 134};
+int array[5] = {0};
+int array[4] = {'c', 'd', '-', '%'};
+
+for (int i = 4;;)

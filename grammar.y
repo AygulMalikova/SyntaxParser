@@ -80,14 +80,61 @@ types
 	| BOOL
 	;
 
+FunctionDef
+    : types IDENTIFIER LPAREN parameter_list RPAREN LBRACE FunctBody RBRACE
+
+FunctionCall //проверить Лиза
+    : IDENTIFIER LPAREN args_list  RPAREN ';'
+    | IDENTIFIER LPAREN RPAREN ';'
+    ;
+
+args_list
+    : args_list ',' IDENTIFIER
+    | IDENTIFIER
+    | IDENTIFIER assignment //приравнять парам функции чему-то - ТАК МОЖНО?
+    ;
+
+parameter_list
+    : parameter_list COMMA arg
+    | arg
+    | arg assignment //уточнить может ли быть назначение параметра в Си ТАК МОЖНО?
+    ;
+
+arg
+    : types IDENTIFIER
+
+FuctionBody
+	: variable_declaration ';'
+	| for ';'
+	| FunctionCall ';'
+    | ArrayUsage ';'
+    | Type ArrayUsage ';'
+    | StructStmt ';'
+    ;
+
 Relation
 	:
 	;
 
 Statement
-	:
-	| for
-	;
+	: variable_declaration ';'
+	| for ';'
+	| FunctionCall ';'
+    | ArrayUsage ';'
+    | Type ArrayUsage ';'
+    | StructStmt ';'
+    | FunctionDef ';'
+    ;
+
+//AYGUL ToDO
+ArrayUsage
+    :
+    ;
+
+//Lisa ToDO
+StructStmt
+    :
+    ;
 
 Expression
 	:
@@ -132,6 +179,8 @@ for_actions
 
 for
 	: FOR '(' for_init ';' for_condition ';' for_actions ')' Statement
+
+
 
 %%
 //subroutines
