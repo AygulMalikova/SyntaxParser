@@ -106,6 +106,7 @@ assignment
     | '=' IDENTIFIER
     | '=' '&' IDENTIFIER                        // address
     | '=' FunctionCall
+    | '=' StructCall
     ;
 
 types
@@ -141,8 +142,9 @@ args_list
 arg
 	: IDENTIFIER
 	| value
+	| StructCall
 	;
-//check
+
 FunctionCall
     : IDENTIFIER '(' args_list ')'
     | IDENTIFIER '(' ')'
@@ -155,12 +157,14 @@ parameter_list
 
 param
     : types IDENTIFIER
+    | types array_declaration
+    | StructInit
+    ;
 
 FunctionBody
 	: FunctionBody FunctPart
 	| FunctPart
 	;
-
 
 FunctPart
 	: variable_declaration
@@ -171,10 +175,9 @@ FunctPart
 	| FunctionCall
 	| ArrayUsage
 	| types ArrayUsage
-	| StructStmt
+	| StructCall
 	| ';'
 
-//	| Return ';'
 
 Return
     :RETURN value ';'
@@ -183,6 +186,7 @@ Return
     | RETURN '(' value ')' ';'
     | RETURN ';'
     ;
+
 
 value
 	: CHAR
@@ -227,20 +231,54 @@ Statement
 	| FunctionCall ';'
 	| ArrayUsage ';'
 	| types ArrayUsage ';'
-	| StructStmt ';'
+	| StructDef ';'
+	| StructInit ';'
 	| FunctionDef ';'
 	| Statement
 	;
 
+//fields_list
+//    : fields_list ';' param
+//    | param
+//    ;
 
-//Lisa ToDO
-StructStmt
-    :
+StructParam
+    : types IDENTIFIER ';'
+    | types array_declaration ';'
+    | StructInit ';'
     ;
+
+fields_list
+    : fields_list StructParam
+    | StructParam
+
+StructDef
+    : STRUCT IDENTIFIER '{' fields_list '}'
+    ;
+
+//struct date bd={8,"июня", 1978};
+StructInit
+	: STRUCT IDENTIFIER IDENTIFIER '=' '{' args_list '}'
+	| STRUCT IDENTIFIER IDENTIFIER
+	;
+
+//p.lastname
+StructCall
+	: StructName '.' StructField
+	;
+
+StructName
+	: IDENTIFIER
+	;
+
+StructField
+	: IDENTIFIER
+	;
 
 //Check
 Expression
 	: IDENTIFIER assignment ';'
+	;
 
 else_body
 	:

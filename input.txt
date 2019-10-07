@@ -24,9 +24,10 @@ array1[4] = 2;
 array2[n] = NULL;
 array2[n] = "String";
 
-int five(int k)
+int sum(int k, int m)
 {
-    return k;
+    sum = k;
+    return sum;
 };
 
 int main( void )
@@ -38,6 +39,18 @@ int main( void )
 int signaturr();
 
 l = main();
-l2 = five(2);
+l2 = sum(2,3);
+
+struct persone {
+  char firstname[20];
+  char lastname[20];
+  struct date bd;
+};
+
+
+struct persone p;
+
+fuckup = p.lastname;
+
 
 for (int i = 4;;)
