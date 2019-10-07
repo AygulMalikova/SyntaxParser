@@ -57,8 +57,6 @@ int			    { count(); return(INT); }
 "void"			{ count(); return(VOID); }
 "while"			{ count(); return(WHILE); }
 
-
-({L}|{D})+(\.({L}|{D})+)+ { count(); return(FILE_NAME); }
 {L}({L}|{D})*		{ count(); return(IDENTIFIER); }
 
 0[xX]{H}+{IS}?		{ count(); return(CONSTANT); }
@@ -66,7 +64,7 @@ int			    { count(); return(INT); }
 L?'(\\.|[^\\'\n])+'	{ count(); return(CONSTANT); }
 
 {D}+{E}{FS}?		{ count(); return(CONSTANT); }
-((([0-9]+)((e|E)(\+|-)?[0-9]+))|(([0-9]*\.[0-9]+)|([0-9]+\.))((e|E)(\+|-)?[0-9]+)?)(f|F|l|L)? { count(); return(CONSTANT); }
+((([0-9]+)((e|E)(\+|-)?[0-9]+))|(([0-9]*\.[0-9]+)|([0-9]+\.))((e|E)(\+|-)?[0-9]+)?)(f|F|l|L)? { count(); return(FLOAT_CONSTANT); }
 0[xX]{H}+{P}{FS}?	{ count(); return(CONSTANT); }
 0[xX]{H}*\.{H}+{P}?{FS}?     { count(); return(CONSTANT); }
 0[xX]{H}+\.{H}*{P}?{FS}?     { count(); return(CONSTANT); }
@@ -124,6 +122,8 @@ L?'(\\.|[^\\'\n])+'	{ count(); return(CONSTANT); }
 "^"			{ count(); return('^'); }
 "|"			{ count(); return('|'); }
 "?"			{ count(); return('?'); }
+
+({L}|{D})+(\.({L}|{D})+)+ { count(); return(FILE_NAME); }
 
 [ \t\v\n\f]		{ count(); }
 .			{ /* Add code to complain about unmatched characters */ }
