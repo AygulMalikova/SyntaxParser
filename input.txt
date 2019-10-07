@@ -25,7 +25,7 @@ array2[n] = "String";
 
 int sum(int k, int m)
 {
-    sum = k;
+    sum =  k;
     return sum;
 };
 
@@ -51,6 +51,6 @@ struct persone p;
 
 fuckup = p.lastname ;
 
-k = sum(sum());
+k = (int) sum(sum());
 
 for (int i = 4;;)

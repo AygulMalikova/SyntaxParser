@@ -97,14 +97,14 @@ comma_separation
 
 assignment
     :
-    | '=' 'NULL'
-    | '=' literal
-    | '=' CHAR
-    | '=' STRING_LITERAL       // "123Hello"
-    | '=' IDENTIFIER
-    | '=' '&' IDENTIFIER                        // address
-    | '=' FunctionCall
-    | '=' StructCall
+    | '=' cast 'NULL'
+    | '=' cast literal
+    | '=' cast CHAR
+    | '=' cast STRING_LITERAL       // "123Hello"
+    | '=' cast IDENTIFIER
+    | '=' cast '&' IDENTIFIER                        // address
+    | '=' cast FunctionCall
+    | '=' cast StructCall
     ;
 
 types
@@ -117,6 +117,11 @@ types
 	| SIGNED
 	| UNSIGNED
 	| BOOL
+	;
+
+cast
+	: '(' types ')'
+	|
 	;
 
 FunctionDef
@@ -138,10 +143,10 @@ args_list
     ;
 
 arg
-	: IDENTIFIER
-	| value
-	| StructCall
-	| FunctionCall
+	: cast IDENTIFIER
+	| cast value
+	| cast StructCall
+	| cast FunctionCall
 	;
 
 FunctionCall
@@ -157,7 +162,7 @@ parameter_list
 param
     : types IDENTIFIER
     | types array_declaration
-    | StructInit
+    | cast StructInit
     ;
 
 FunctionBody
@@ -179,10 +184,10 @@ FunctPart
 
 
 Return
-    :RETURN value ';'
-    | RETURN IDENTIFIER ';'
-    | RETURN '(' IDENTIFIER ')' ';'
-    | RETURN '(' value ')' ';'
+    :RETURN cast value ';'
+    | RETURN cast IDENTIFIER ';'
+    | RETURN cast '(' IDENTIFIER ')' ';'
+    | RETURN cast '(' value ')' ';'
     | RETURN ';'
     ;
 
@@ -236,11 +241,6 @@ Statement
 	| Statement
 	;
 
-//fields_list
-//    : fields_list ';' param
-//    | param
-//    ;
-
 StructParam
     : types IDENTIFIER ';'
     | types array_declaration ';'
@@ -255,7 +255,6 @@ StructDef
     : STRUCT IDENTIFIER '{' fields_list '}'
     ;
 
-//struct date bd={8,"июня", 1978};
 StructInit
 	: STRUCT IDENTIFIER IDENTIFIER '=' '{' args_list '}'
 	| STRUCT IDENTIFIER IDENTIFIER
