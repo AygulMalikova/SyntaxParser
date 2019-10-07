@@ -4,6 +4,7 @@
 int d = 1234;
 int k = 1;
 
+float b = 13.34;
 
 char a = 'a';
 a = 'b';
