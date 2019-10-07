@@ -120,7 +120,7 @@ types
 	;
 
 FunctionDef
-    : "void" IDENTIFIER '(' parameter_list ')' CompoundStmt
+    : VOID IDENTIFIER '(' parameter_list ')' CompoundStmt
     | types IDENTIFIER '(' parameter_list ')' CompoundStmt
     | types IDENTIFIER '(' VOID ')' CompoundStmt
     | types IDENTIFIER '('  ')' CompoundStmt

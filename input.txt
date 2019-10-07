@@ -23,7 +23,7 @@ array1[4] = 2;
 array2[n] = NULL;
 array2[n] = "String";
 
-int main()
+int main( void )
 {
   int a = 0;
   return 0;
