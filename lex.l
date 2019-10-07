@@ -70,8 +70,8 @@ L?'(\\.|[^\\'\n])+'	{ count(); return(CONSTANT); }
 0[xX]{H}+\.{H}*{P}?{FS}?     { count(); return(CONSTANT); }
 '.+'                { count(); return(CHAR); }
 [1-9]{D}*{IS}?    { count(); return(INTEGER_CONSTANT); }
-({L}|{D})+                { count(); return(STRING); }
-
+L?\"(\\.|[^\\"\n])*\"	{ count(); return(STRING_LITERAL); }
+\<(\\.|[^\\"\n])*\> { count(); return(FILE_LITERAL); }
 
 "..."			{ count(); return(ELLIPSIS); }
 ">>="			{ count(); return(RIGHT_ASSIGN); }
@@ -122,9 +122,6 @@ L?'(\\.|[^\\'\n])+'	{ count(); return(CONSTANT); }
 "^"			{ count(); return('^'); }
 "|"			{ count(); return('|'); }
 "?"			{ count(); return('?'); }
-
-({L}|{D})+(\.({L}|{D})+)+ { count(); return(FILE_NAME); }
-
 [ \t\v\n\f]		{ count(); }
 .			{ /* Add code to complain about unmatched characters */ }
 

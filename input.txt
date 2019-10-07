@@ -1,5 +1,4 @@
 #include <akfg.h>;
-#include "123.h";
 
 int d = 1234;
 int k = 1;
@@ -51,6 +50,5 @@ struct persone {
 struct persone p;
 
 fuckup = p.lastname;
-
 
 for (int i = 4;;)

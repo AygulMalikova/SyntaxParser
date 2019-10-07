@@ -5,11 +5,11 @@
 
 //definitions
 
-%token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF INCLUDE ENUMERATION_CONSTANT FILE_NAME CHAR INTEGER_CONSTANT STRING FLOAT_CONSTANT
+%token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF INCLUDE ENUMERATION_CONSTANT INTEGER_CONSTANT FLOAT_CONSTANT
 %token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
 %token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
-%token XOR_ASSIGN OR_ASSIGN TYPE_NAME DOUBLE_QUOTE HASH DOT
+%token XOR_ASSIGN OR_ASSIGN TYPE_NAME DOUBLE_QUOTE HASH DOT FILE_LITERAL
 
 %token TYPEDEF EXTERN STATIC AUTO REGISTER INLINE RESTRICT TYPEDEF_NAME
 %token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID BOOL
@@ -42,8 +42,7 @@ include_files
 	;
 
 file
-    : '<' FILE_NAME '>'                         //#include <header.h>;
-    | DOUBLE_QUOTE FILE_NAME DOUBLE_QUOTE       //#include "header.h";
+    : FILE_LITERAL                         //#include <header.h>; TODO: #include "header.h";
     ;
 
 //var declaration
@@ -101,8 +100,7 @@ assignment
     | '=' 'NULL'
     | '=' literal
     | '=' CHAR
-    | '=' DOUBLE_QUOTE STRING DOUBLE_QUOTE      // "123Hello"
-    | '=' DOUBLE_QUOTE IDENTIFIER DOUBLE_QUOTE  //  "Hello"
+    | '=' STRING_LITERAL       // "123Hello"
     | '=' IDENTIFIER
     | '=' '&' IDENTIFIER                        // address
     | '=' FunctionCall
@@ -264,7 +262,7 @@ StructInit
 
 //p.lastname
 StructCall
-	: StructName '.' StructField
+	: StructName DOT StructField
 	;
 
 StructName
