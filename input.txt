@@ -23,11 +23,20 @@ array1[4] = 2;
 array2[n] = NULL;
 array2[n] = "String";
 
+int five(int k)
+{
+    return k;
+};
+
 int main( void )
 {
   int a = 0;
   return 0;
-}
+};
 
+int signaturr();
+
+l = main();
+l2 = five(2);
 
 for (int i = 4;;)

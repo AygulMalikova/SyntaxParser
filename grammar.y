@@ -105,6 +105,7 @@ assignment
     | '=' DOUBLE_QUOTE IDENTIFIER DOUBLE_QUOTE  //  "Hello"
     | '=' IDENTIFIER
     | '=' '&' IDENTIFIER                        // address
+    | '=' FunctionCall
     ;
 
 types
@@ -124,6 +125,7 @@ FunctionDef
     | types IDENTIFIER '(' parameter_list ')' CompoundStmt
     | types IDENTIFIER '(' VOID ')' CompoundStmt
     | types IDENTIFIER '('  ')' CompoundStmt
+    | types IDENTIFIER '(' ')'
     ;
 
 CompoundStmt
@@ -132,22 +134,26 @@ CompoundStmt
 	;
 
 args_list
-    : args_list ',' IDENTIFIER
-    | IDENTIFIER
-    ;
-
-//check
-FunctionCall
-    : IDENTIFIER '(' args_list ')' ';'
-    | IDENTIFIER '(' ')' ';'
-    ;
-
-parameter_list
-    : parameter_list ',' arg
+    : args_list ',' arg
     | arg
     ;
 
 arg
+	: IDENTIFIER
+	| value
+	;
+//check
+FunctionCall
+    : IDENTIFIER '(' args_list ')'
+    | IDENTIFIER '(' ')'
+    ;
+
+parameter_list
+    : parameter_list ',' param
+    | param
+    ;
+
+param
     : types IDENTIFIER
 
 FunctionBody
