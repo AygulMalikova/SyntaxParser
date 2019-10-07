@@ -141,6 +141,7 @@ arg
 	: IDENTIFIER
 	| value
 	| StructCall
+	| FunctionCall
 	;
 
 FunctionCall

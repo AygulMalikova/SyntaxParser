@@ -49,6 +49,8 @@ struct persone {
 
 struct persone p;
 
-fuckup = p.lastname;
+fuckup = p.lastname ;
+
+k = sum(sum());
 
 for (int i = 4;;)
