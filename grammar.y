@@ -108,8 +108,7 @@ assignment
     ;
 
 types
-	: VOID
-	| CHAR
+	: CHAR
 	| SHORT
 	| INT
 	| LONG
@@ -121,20 +120,26 @@ types
 	;
 
 FunctionDef
-    : types IDENTIFIER '(' parameter_list ')' '{' FunctionBody Return '}'
-    | VOID IDENTIFIER '(' parameter_list ')' '{' FunctionBody '}'
-    | types IDENTIFIER '(' VOID ')' '{' FunctionBody Return'}'
-    | types IDENTIFIER '('  ')' '{' FunctionBody Return'}'
+    : "void" IDENTIFIER '(' parameter_list ')' CompoundStmt
+    | types IDENTIFIER '(' parameter_list ')' CompoundStmt
+    | types IDENTIFIER '(' VOID ')' CompoundStmt
+    | types IDENTIFIER '('  ')' CompoundStmt
     ;
 
-FunctionCall //check
-    : IDENTIFIER '(' args_list ')' ';'
-    | IDENTIFIER '(' ')' ';'
-    ;
+CompoundStmt
+	: '{' FunctionBody '}'
+	| '{' FunctionBody Return '}'
+	;
 
 args_list
     : args_list ',' IDENTIFIER
     | IDENTIFIER
+    ;
+
+//check
+FunctionCall
+    : IDENTIFIER '(' args_list ')' ';'
+    | IDENTIFIER '(' ')' ';'
     ;
 
 parameter_list
@@ -146,23 +151,29 @@ arg
     : types IDENTIFIER
 
 FunctionBody
-	: variable_declaration ';'
-	| Expression';'
-	| if ';'
-	| for ';'
-	| while ';'
-	| FunctionCall ';'
-    | ArrayUsage ';'
-    | types ArrayUsage ';'
-    | StructStmt ';'
-    | Return ';'
-    | FunctionBody
-    ;
+	: FunctionBody FunctPart
+	| FunctPart
+	;
+
+
+FunctPart
+	: variable_declaration
+	| Expression
+	| if
+	| for
+	| while
+	| FunctionCall
+	| ArrayUsage
+	| types ArrayUsage
+	| StructStmt
+	| ';'
+
+//	| Return ';'
 
 Return
-    : RETURN '(' IDENTIFIER ')' ';'
+    :RETURN value ';'
     | RETURN IDENTIFIER ';'
-    | RETURN value ';'
+    | RETURN '(' IDENTIFIER ')' ';'
     | RETURN '(' value ')' ';'
     | RETURN ';'
     ;
@@ -179,6 +190,7 @@ value
 	| BOOL
 	| pointer
 	| address
+	| literal
 	;
 
 literal
@@ -186,10 +198,10 @@ literal
     | INTEGER_CONSTANT
     ;
 
-//TODO
 address
-    :
-    ;
+	:
+	;
+
 //TODO
 pointer
     :
@@ -206,12 +218,12 @@ Statement
 	| for ';'
 	| while ';'
 	| FunctionCall ';'
-    | ArrayUsage ';'
-    | types ArrayUsage ';'
-    | StructStmt ';'
-    | FunctionDef ';'
-    | Statement
-    ;
+	| ArrayUsage ';'
+	| types ArrayUsage ';'
+	| StructStmt ';'
+	| FunctionDef ';'
+	| Statement
+	;
 
 
 //Lisa ToDO

@@ -23,16 +23,11 @@ array1[4] = 2;
 array2[n] = NULL;
 array2[n] = "String";
 
-void maxnum(int a, int b){
-  int max = b;
-}
-
 int main()
 {
-  int a;
+  int a = 0;
   return 0;
 }
-
 
 
 for (int i = 4;;)
