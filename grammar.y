@@ -48,7 +48,6 @@ file
 //var declaration
 variable_declaration
     : inline_initial_declaration ';'
-    | ArrayUsage
     ;
 
 inline_initial_declaration
