@@ -65,7 +65,6 @@ struct struct_fields {
 };
 
 struct param_list {
-    struct car arr_car[10];
     struct parameter_declaration parameter_declaration[10]; //  тут надо как-то задать размер массива параметров
 };
 
