@@ -38,7 +38,7 @@ global_declaration
     | FunctionDef
     | variable_declaration
     | StructDef ';'
-    | typedef_declaration
+    | typedef_declaration ';'
     ;
 
 include_files
@@ -49,7 +49,6 @@ file
     : FILE_LITERAL                         //#include <header.h>; TODO: #include "header.h";
     ;
 
-//var declaration
 variable_declaration
     : typechain inline_initial_declaration ';'
     ;
@@ -71,8 +70,28 @@ array_declaration
     ;
 
 typedef_declaration
-    :
+    : TYPEDEF old_name new_name
+    | StructInit
     ;
+
+function_redeclaration
+	:'(' pointer IDENTIFIER ')' '(' types ')'
+	|'(' pointer IDENTIFIER ')' '(' parameter_list ')'
+	;
+
+old_name
+	: IDENTIFIER
+	| types
+	| VOID
+	;
+
+new_name
+	: IDENTIFIER
+	| pointer IDENTIFIER
+	| function_redeclaration
+	;
+
+
 
 list_initializer
     : '=' '{' args_list '}'
@@ -216,6 +235,7 @@ Statement
 	| StructDef ';'
 	| StructInit ';'
 	| FunctionDef ';'
+	| typedef_declaration ';'
 	;
 
 StructParam
@@ -233,11 +253,15 @@ StructDef
 	: STRUCT IDENTIFIER '{' fields_list '}'
 	| STRUCT '{' fields_list '}'
 	| STRUCT IDENTIFIER
+	| TYPEDEF STRUCT IDENTIFIER '{' fields_list '}'
+	| TYPEDEF STRUCT '{' '}' IDENTIFIER
+	| TYPEDEF STRUCT '{'fields_list '}' IDENTIFIER
     ;
 
 StructInit
 	: STRUCT IDENTIFIER IDENTIFIER '=' '{' args_list '}'
 	| STRUCT IDENTIFIER IDENTIFIER
+	| TYPEDEF STRUCT IDENTIFIER IDENTIFIER
 	;
 
 StructCall
@@ -315,6 +339,8 @@ math_expr
   | '('math_expr')'
   | value
   ;
+
+
 %%
 //subroutines
 

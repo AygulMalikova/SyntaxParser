@@ -61,3 +61,22 @@ char nook = p->lastname;
 
 int k = (int) sum(sum());
 
+typedef struct {
+   char name[20];
+   int liga;
+   float ochki;
+}f_club;
+
+typedef int length;
+typedef struct MyStruct newtype;
+
+typedef struct {
+    int data1;
+    char data2;
+} newtype;
+
+typedef void (*printer_t)(int);
+
+typedef int (*function)(int a, int b);
+
+typedef int *intptr;
