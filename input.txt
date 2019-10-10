@@ -6,39 +6,42 @@ int k = 1;
 float b = 13.34;
 
 char a = 'a';
-a = 'b';
 
 int *p;
 char *str = NULL;
 char *str = "Hello";
 char *str = "123Hello";
-ip = &var;
+
 int **ptr1 = &ptr2;
+
+int pointer = *str;
 
 int array[100];
 int array[] = {7, 8, 134};
 int array[5] = {0};
 int array[4] = {'c', 'd', '-', '%'};
-array1[4] = 2;
-array2[n] = NULL;
-array2[n] = "String";
+
 
 int sum(int k, int m)
 {
     sum =  k;
+    ip = &var;
+    a = 'b';
+    array1[4] = 2;
+    array2[n] = NULL;
+    array2[n] = "String";
     return sum;
-};
+}
 
 int main( void )
 {
   int a = 0;
   return 0;
-};
+}
 
 int signaturr();
-
-l = main();
-l2 = sum(2,3);
+int l = main();
+float l2 = sum(2,3);
 
 struct persone {
   char firstname[20];
@@ -49,8 +52,7 @@ struct persone {
 
 struct persone p;
 
-fuckup = p.lastname ;
+char *fuckup = p.lastname ;
 
-k = (int) sum(sum());
+int k = (int) sum(sum());
 
-for (int i = 4;;)

@@ -29,13 +29,17 @@
 
 //include
 compilation_unit
-    : include_files
-    | variable_declaration
-    | Statement
-	| compilation_unit include_files
-	| compilation_unit variable_declaration
-	| compilation_unit Statement
+    : global_declaration
+    | compilation_unit global_declaration
 	;
+
+global_declaration
+    : include_files
+    | FunctionDef
+    | variable_declaration
+    | StructDef
+    | typedef_declaration
+    ;
 
 include_files
 	: HASH INCLUDE file ';'
@@ -56,11 +60,16 @@ inline_initial_declaration
     ;
 
 initial_declaration
-	: types IDENTIFIER assignment       // primitives
-	| types '*' IDENTIFIER assignment   // primitive pointers
-	| types '*' '*' IDENTIFIER assignment   // double pointers
-	| types array_declaration           // arrays
+	: typechain IDENTIFIER assignment                               // primitives
+	| typechain pointer IDENTIFIER assignment                       // primitive pointers
+	| typechain array_declaration                                   // arrays
+	| STRUCT IDENTIFIER IDENTIFIER struct_assignment
 	;
+
+struct_assignment
+    : '=' '{' args_list '}'
+    |
+    ;
 
 array_declaration
     : IDENTIFIER '[' ']' list_initializer
@@ -71,19 +80,17 @@ array_declaration
     ;
 
 ArrayUsage
-    : types array_declaration
+    : typechain array_declaration
     | IDENTIFIER '[' INTEGER_CONSTANT ']' assignment
     | IDENTIFIER '[' IDENTIFIER ']' assignment                  // int n = 10; array[n] = 10;
     ;
 
-list_initializer
-    : '=' '{' comma_separation '}'
-    | designated_initializer
+typedef_declaration
+    :
     ;
 
-designated_initializer
-    : '=' '{' '[' CONSTANT ' .'' .'' .' CONSTANT ']' '=' CONSTANT '}'
-    | '=' '{' '[' CONSTANT ' .'' .'' .' CONSTANT ']' '=' CHAR '}'
+list_initializer
+    : '=' '{' comma_separation '}'
     ;
 
 comma_separation
@@ -96,14 +103,19 @@ comma_separation
 
 assignment
     :
-    | '=' cast 'NULL'
+    | '=' 'NULL'
     | '=' cast literal
     | '=' cast CHAR
     | '=' cast STRING_LITERAL       // "123Hello"
     | '=' cast IDENTIFIER
     | '=' cast '&' IDENTIFIER                        // address
+    | '=' cast pointer IDENTIFIER                        // address
     | '=' cast FunctionCall
     | '=' cast StructCall
+    ;
+
+typechain
+    : types
     ;
 
 types
@@ -118,17 +130,22 @@ types
 	| BOOL
 	;
 
+pointer
+    : pointer '*'
+    | '*'
+    ;
+
 cast
-	: '(' types ')'
+	: '(' typechain ')'
 	|
 	;
 
 FunctionDef
     : VOID IDENTIFIER '(' parameter_list ')' CompoundStmt
-    | types IDENTIFIER '(' parameter_list ')' CompoundStmt
-    | types IDENTIFIER '(' VOID ')' CompoundStmt
-    | types IDENTIFIER '('  ')' CompoundStmt
-    | types IDENTIFIER '(' ')'
+    | typechain IDENTIFIER '(' parameter_list ')' CompoundStmt
+    | typechain IDENTIFIER '(' VOID ')' CompoundStmt
+    | typechain IDENTIFIER '('  ')' CompoundStmt
+    | typechain IDENTIFIER '(' ')' ';'
     ;
 
 CompoundStmt
@@ -159,8 +176,8 @@ parameter_list
     ;
 
 param
-    : types IDENTIFIER
-    | types array_declaration
+    : typechain IDENTIFIER
+    | typechain array_declaration
     | cast StructInit
     ;
 
@@ -177,7 +194,7 @@ FunctPart
 	| while
 	| FunctionCall
 	| ArrayUsage
-	| types ArrayUsage
+	| typechain ArrayUsage
 	| StructCall
 	| ';'
 
@@ -216,11 +233,6 @@ address
 	:
 	;
 
-//TODO
-pointer
-    :
-    ;
-
 Relation
 	:
 	;
@@ -233,16 +245,16 @@ Statement
 	| while ';'
 	| FunctionCall ';'
 	| ArrayUsage ';'
-	| types ArrayUsage ';'
-	| StructDef ';'
+	| typechain ArrayUsage ';'
+	| StructDef
 	| StructInit ';'
 	| FunctionDef ';'
 	| Statement
 	;
 
 StructParam
-    : types IDENTIFIER ';'
-    | types array_declaration ';'
+    : typechain IDENTIFIER ';'
+    | typechain array_declaration ';'
     | StructInit ';'
     ;
 
@@ -251,7 +263,7 @@ fields_list
     | StructParam
 
 StructDef
-    : STRUCT IDENTIFIER '{' fields_list '}'
+    : STRUCT IDENTIFIER '{' fields_list '}' ';'
     ;
 
 StructInit
