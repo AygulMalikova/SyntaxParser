@@ -9,7 +9,7 @@
 %token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
 %token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
-%token XOR_ASSIGN OR_ASSIGN TYPE_NAME DOUBLE_QUOTE HASH DOT FILE_LITERAL
+%token XOR_ASSIGN OR_ASSIGN TYPE_NAME DOUBLE_QUOTE HASH DOT FILE_LITERAL NULL
 
 %token TYPEDEF EXTERN STATIC AUTO REGISTER INLINE RESTRICT TYPEDEF_NAME
 %token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID BOOL
@@ -37,7 +37,7 @@ global_declaration
     : include_files
     | FunctionDef
     | variable_declaration
-    | StructDef
+    | StructDef ';'
     | typedef_declaration
     ;
 
@@ -61,22 +61,15 @@ inline_initial_declaration
 
 initial_declaration
 	: typechain IDENTIFIER assignment                               // primitives
-	| typechain pointer IDENTIFIER assignment                       // primitive pointers
+	| typechain IDENTIFIER assignment                       // primitive pointers
 	| typechain array_declaration                                   // arrays
-	| STRUCT IDENTIFIER IDENTIFIER struct_assignment
+	| typechain IDENTIFIER list_initializer
 	;
-
-struct_assignment
-    : '=' '{' args_list '}'
-    |
-    ;
 
 array_declaration
     : IDENTIFIER '[' ']' list_initializer
-    | IDENTIFIER '[' INTEGER_CONSTANT ']'                       // int array[10];
-    | IDENTIFIER '[' INTEGER_CONSTANT ']' list_initializer
-    | IDENTIFIER '[' IDENTIFIER ']'                             // int n = 10; int array[n];
-    | IDENTIFIER '[' IDENTIFIER ']' list_initializer
+    | IDENTIFIER '[' INTEGER_CONSTANT ']' list_initializer      // int array[10];
+    | IDENTIFIER '[' IDENTIFIER ']' list_initializer			// int n = 10; int array[n];
     ;
 
 ArrayUsage
@@ -90,20 +83,13 @@ typedef_declaration
     ;
 
 list_initializer
-    : '=' '{' comma_separation '}'
-    ;
-
-comma_separation
-    :
-    | literal
-    | CHAR
-    | comma_separation ',' literal
-    | comma_separation ',' CHAR
+    : '=' '{' args_list '}'
+	|
     ;
 
 assignment
     :
-    | '=' 'NULL'
+	| '=' NULL
     | '=' cast literal
     | '=' cast CHAR
     | '=' cast STRING_LITERAL       // "123Hello"
@@ -116,6 +102,9 @@ assignment
 
 typechain
     : types
+	| StructDef
+	| types pointer
+	| StructDef pointer
     ;
 
 types
@@ -154,15 +143,15 @@ CompoundStmt
 	;
 
 args_list
-    : args_list ',' arg
-    | arg
+    : args_list ',' cast arg
+    | cast arg
     ;
 
 arg
-	: cast IDENTIFIER
-	| cast value
-	| cast StructCall
-	| cast FunctionCall
+	: IDENTIFIER
+	| literal
+	| StructCall
+	| FunctionCall
 	;
 
 FunctionCall
@@ -197,41 +186,21 @@ FunctPart
 	| typechain ArrayUsage
 	| StructCall
 	| ';'
+	;
 
 
 Return
-    :RETURN cast value ';'
-    | RETURN cast IDENTIFIER ';'
-    | RETURN cast '(' IDENTIFIER ')' ';'
-    | RETURN cast '(' value ')' ';'
+    : RETURN cast arg ';'
     | RETURN ';'
     ;
-
-
-value
-	: CHAR
-	| SHORT
-	| INT
-	| LONG
-	| FLOAT
-	| DOUBLE
-	| SIGNED
-	| UNSIGNED
-	| BOOL
-	| pointer
-	| address
-	| literal
-	;
 
 literal
     : CONSTANT
     | INTEGER_CONSTANT
 	| FLOAT_CONSTANT
+	| CHAR
+	| STRING_LITERAL
     ;
-
-address
-	:
-	;
 
 Relation
 	:
@@ -261,9 +230,12 @@ StructParam
 fields_list
     : fields_list StructParam
     | StructParam
+	;
 
 StructDef
-    : STRUCT IDENTIFIER '{' fields_list '}' ';'
+	: STRUCT IDENTIFIER '{' fields_list '}'
+	| STRUCT '{' fields_list '}'
+	| STRUCT IDENTIFIER
     ;
 
 StructInit
@@ -328,9 +300,7 @@ for_actions
 
 for
 	: FOR '(' for_init ';' for_condition ';' for_actions ')' Statement
-
-
-
+	;
 %%
 //subroutines
 
