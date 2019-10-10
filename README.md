@@ -1,6 +1,6 @@
 # Syntax Parser for the ANSI C
 
-## Implemented by Artyom IUrin, Elizaveta Kolchanova and Aygul Malikova
+## Implemented by Artyom IUrin, Elizaveta Kolchanova and Aygul Malikova, SE-01, "ALA" Team
 
 To run the program, firsly, clone the project
 
