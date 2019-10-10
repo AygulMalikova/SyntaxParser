@@ -90,6 +90,7 @@ assignment
     | '=' cast pointer IDENTIFIER                        // address
     | '=' cast FunctionCall
     | '=' cast StructCall
+    | '=' cast math_expr
     ;
 
 typechain
@@ -233,6 +234,7 @@ StructInit
 //p.lastname
 StructCall
 	: StructName DOT StructField
+	| StructName "->" StructField
 	;
 
 StructName
@@ -243,7 +245,6 @@ StructField
 	: IDENTIFIER
 	;
 
-//Check
 Expression
 	: IDENTIFIER assignment ';'
 	| StructCall assignment ';'
@@ -296,6 +297,16 @@ for_actions
 for
 	: FOR '(' for_init ';' for_condition ';' for_actions ')' Statement
 	;
+
+math_expr
+ : math_expr '+' math_expr
+  | math_expr '-' math_expr
+  | math_expr '*' math_expr
+  | math_expr '/' math_expr
+  | math_expr '%' math_expr
+  | '('math_expr')'
+  | arg
+  ;
 %%
 //subroutines
 

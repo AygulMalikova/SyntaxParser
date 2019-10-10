@@ -27,11 +27,14 @@ int sum(int k, int m)
     sum =  k;
     ip.f = &var;
     a = 'b';
+    a = 25 * 19 - (21 + 10)/2;
     array1[4] = 2;
     array2[n] = NULL;
     array2[n] = "String";
     return sum;
 }
+
+int l = 233 - 9;
 
 int main( void )
 {
