@@ -25,7 +25,7 @@ int array[4] = {'c', 'd', '-', '%'};
 int sum(int k, int m)
 {
     sum =  k;
-    ip = &var;
+    ip.f = &var;
     a = 'b';
     array1[4] = 2;
     array2[n] = NULL;

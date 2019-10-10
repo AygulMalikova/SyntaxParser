@@ -56,7 +56,7 @@ int			    { count(); return(INT); }
 "unsigned"		{ count(); return(UNSIGNED); }
 "void"			{ count(); return(VOID); }
 "while"			{ count(); return(WHILE); }
-"NULL" 			{ count(); return(NULL); }
+"NULL" 			{ count(); return(NULL_); }
 
 {L}({L}|{D})*		{ count(); return(IDENTIFIER); }
 
