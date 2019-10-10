@@ -6,9 +6,10 @@ To run the program, firsly, clone the project
 
 `git clone https://github.com/AygulMalikova/SyntaxParser.git`
 
-If you have macOS, write the command below
+In the terminal write the commands below
 
-`docker run -v $(pwd):/app -i -t cmbant/docker-gcc-build /bin/bash apt-get install bison flex`
+`docker run -v $(pwd):/app -i -t cmbant/docker-gcc-build /bin/bash` 
+`apt-get install bison flex`
 
 To run the yacc and lexer
 
