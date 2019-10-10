@@ -138,9 +138,18 @@ CompoundStmt
 args_list
     : args_list ',' cast arg
     | cast arg
+    | math_expr
     ;
 
 arg
+	: IDENTIFIER
+	| literal
+	| StructCall
+	| FunctionCall
+	| math_expr
+	;
+
+value
 	: IDENTIFIER
 	| literal
 	| StructCall
@@ -231,10 +240,9 @@ StructInit
 	| STRUCT IDENTIFIER IDENTIFIER
 	;
 
-//p.lastname
 StructCall
 	: StructName DOT StructField
-	| StructName "->" StructField
+	| StructName PTR_OP StructField
 	;
 
 StructName
@@ -305,7 +313,7 @@ math_expr
   | math_expr '/' math_expr
   | math_expr '%' math_expr
   | '('math_expr')'
-  | arg
+  | value
   ;
 %%
 //subroutines

@@ -44,7 +44,7 @@ int main( void )
 
 int signaturr();
 int l = main();
-float l2 = sum(2,3);
+float l2 = sum(2,3+3);
 
 struct persone {
   char firstname[20];
@@ -53,9 +53,11 @@ struct persone {
 };
 
 
-struct persone p;
+struct persone p = {"Name", "Surname", 2+2};
 
-char *fuckup = p.lastname ;
+char *okk = p.lastname ;
+
+char nook = p->lastname;
 
 int k = (int) sum(sum());
 
