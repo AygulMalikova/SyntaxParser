@@ -94,9 +94,9 @@ new_name
 
 
 list_initializer
-    : '=' '{' args_list '}'
+	: '=' '{' args_list '}'
 	|
-    ;
+	;
 
 init_assignment
     :
@@ -110,6 +110,7 @@ init_assignment
     | '=' cast FunctionCall
     | '=' cast StructCall
     | '=' cast math_expr
+    | '=' cast logic_expr
     ;
 
 assignment
@@ -124,6 +125,7 @@ assignment
     | '=' cast FunctionCall
     | '=' cast StructCall
     | '=' cast math_expr
+    | '=' cast logic_expr
     | short_math
     ;
 
@@ -173,6 +175,7 @@ args_list
     : args_list ',' cast arg
     | cast arg
     | math_expr
+    | logic_expr
     ;
 
 arg
@@ -181,6 +184,7 @@ arg
 	| StructCall
 	| FunctionCall
 	| math_expr
+	| logic_expr
 	;
 
 value
@@ -237,7 +241,7 @@ literal
     ;
 
 Relation
-	:
+	: logic_expr
 	;
 
 Statement
@@ -362,16 +366,33 @@ short_math
 	|  DIV_ASSIGN value
 
 math_expr
- : math_expr '+' math_expr
-  | math_expr '-' math_expr
-  | math_expr '*' math_expr
-  | math_expr '/' math_expr
-  | math_expr '%' math_expr
-  | '('math_expr')'
-  | value
-  ;
+ 	: '('math_expr')'
+ 	| math_expr '+' math_expr
+	| math_expr '-' math_expr
+	| math_expr '*' math_expr
+	| math_expr '/' math_expr
+	| math_expr '%' math_expr
+	| value
+ 	;
 
 
+logic_expr
+	: '(' logic_expr ')'
+	| logic_expr AND_OP logic_expr
+	| logic_expr OR_OP logic_expr
+	| logic_expr LE_OP logic_expr
+	| logic_expr GE_OP logic_expr
+	| logic_expr EQ_OP logic_expr
+	| logic_expr NE_OP logic_expr
+	| logic_expr '<' logic_expr
+	| logic_expr '>' logic_expr
+	| logic_var
+	;
+
+logic_var
+	: BOOL
+	| value
+	;
 %%
 //subroutines
 

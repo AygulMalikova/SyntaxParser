@@ -31,7 +31,10 @@ int sum(int k, int m)
     array1[4] = 2;
     array2[n] = NULL;
     array2[n] = "String";
-    k ++ ;
+    k += 2;
+    l = 1 - (k + 2);
+    _Bool asd = false;
+    asd =  (3 < 2) ;
     return sum;
 }
 
