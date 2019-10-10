@@ -11,5 +11,6 @@ If you have macOS, write the command below
 `docker run -v $(pwd):/app -i -t cmbant/docker-gcc-build /bin/bash apt-get install bison flex`
 
 To run the yacc and lexer
+
 `cd app`
 `yacc -d grammar.y && flex lex.l && gcc -Wall y.tab.c lex.yy.c -lfl && cat input.txt | ./a.out`
