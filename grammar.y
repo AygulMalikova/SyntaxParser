@@ -59,7 +59,7 @@ inline_initial_declaration
     ;
 
 initial_declaration
-	: IDENTIFIER assignment                               // primitives
+	: IDENTIFIER init_assignment                               // primitives
 	| array_declaration                                   // arrays
 	| IDENTIFIER list_initializer
 	;
@@ -98,6 +98,20 @@ list_initializer
 	|
     ;
 
+init_assignment
+    :
+	| '=' NULL_
+    | '=' cast literal
+    | '=' cast CHAR
+    | '=' cast STRING_LITERAL       // "123Hello"
+    | '=' cast IDENTIFIER
+    | '=' cast '&' IDENTIFIER                        // address
+    | '=' cast pointer IDENTIFIER                        // address
+    | '=' cast FunctionCall
+    | '=' cast StructCall
+    | '=' cast math_expr
+    ;
+
 assignment
     :
 	| '=' NULL_
@@ -110,6 +124,7 @@ assignment
     | '=' cast FunctionCall
     | '=' cast StructCall
     | '=' cast math_expr
+    | short_math
     ;
 
 typechain
@@ -329,6 +344,22 @@ for_actions
 for
 	: FOR '(' for_init ';' for_condition ';' for_actions ')' Statement
 	;
+//
+//short_math
+//	: IDENTIFIER INC_OP
+//	| IDENTIFIER DEC_OP
+//	| IDENTIFIER ADD_ASSIGN value
+//	| IDENTIFIER SUB_ASSIGN value
+//	| IDENTIFIER MUL_ASSIGN value
+//	| IDENTIFIER DIV_ASSIGN value
+//
+short_math
+	:  INC_OP
+	|  DEC_OP
+	|  ADD_ASSIGN value
+	|  SUB_ASSIGN value
+	|  MUL_ASSIGN value
+	|  DIV_ASSIGN value
 
 math_expr
  : math_expr '+' math_expr

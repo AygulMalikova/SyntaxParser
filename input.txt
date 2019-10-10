@@ -31,6 +31,7 @@ int sum(int k, int m)
     array1[4] = 2;
     array2[n] = NULL;
     array2[n] = "String";
+    k ++ ;
     return sum;
 }
 
@@ -80,3 +81,5 @@ typedef void (*printer_t)(int);
 typedef int (*function)(int a, int b);
 
 typedef int *intptr;
+
+int k = 0;
