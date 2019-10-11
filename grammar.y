@@ -2,7 +2,6 @@
     #include <stdio.h>
     #include "Tree.c"
 
-
     #ifndef YYSTYPE
     # define YYSTYPE char*
     #endif
@@ -11,15 +10,36 @@
 %}
 
 //definitions
+%union {
+    char *string;
+    struct variable_declaration *variable_declaration;
+    struct global_declaration *global_decl;
+    struct include_files *include_files;
+    struct typechain *typechain;
+    struct StructDef *StructDef;
+    struct initial_declaration *initial_declaration;
+}
 
-%token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF INCLUDE ENUMERATION_CONSTANT INTEGER_CONSTANT FLOAT_CONSTANT
+%token CONSTANT SIZEOF INCLUDE ENUMERATION_CONSTANT INTEGER_CONSTANT FLOAT_CONSTANT
 %token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
 %token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
-%token XOR_ASSIGN OR_ASSIGN TYPE_NAME DOUBLE_QUOTE HASH DOT FILE_LITERAL NULL_
+%token XOR_ASSIGN OR_ASSIGN TYPE_NAME DOUBLE_QUOTE HASH DOT  NULL_
 
 %token TYPEDEF EXTERN STATIC AUTO REGISTER INLINE RESTRICT TYPEDEF_NAME
-%token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID BOOL
+%token <string> IDENTIFIER
+%token <string> CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID BOOL
+%token <string> FILE_LITERAL STRING_LITERAL
+
+
+%type  <string> types file
+%type  <variable_declaration> variable_declaration
+%type  <typechain> typechain
+%type  <global_declaration> compilation_unit
+%type  <StructDef> StructDef
+%type  <include_files> include_files
+%type  <initial_declaration> initial_declaration
+
 %token STRUCT UNION ENUM ELLIPSIS
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
@@ -47,12 +67,12 @@ global_declaration
     ;
 
 include_files
-	: HASH INCLUDE file
+	: HASH INCLUDE file                 { $$ = include_files($3); }
 	;
 
 file
-    : FILE_LITERAL                      { $$ = include_files($1); printf("STROKA3 %s \n", $1);} //#include <header.h>
-	| STRING_LITERAL 				    { $$ = include_files($1); } //#include "header.h"
+    : FILE_LITERAL                      //#include <header.h>
+	| STRING_LITERAL 				    //#include "header.h"
     ;
 
 typedef_declaration
@@ -80,7 +100,7 @@ types_list
 	;
 
 variable_declaration
-    : typechain inline_initial_declaration               { $$ = variable_declaration($1); printf("TYPE %s \n", $1);}
+    : typechain inline_initial_declaration               { $$ = variable_declaration($1, $2); }
     ;
 
 inline_initial_declaration
@@ -111,24 +131,24 @@ assignment
     ;
 
 typechain
-    : types
-	| StructDef
-	| types pointer
-	| StructDef pointer
+    : types         { $$ = $1;}
+	| StructDef     { $$ = $1;}
+	| types pointer { $$ = $1;}
+	| StructDef pointer     { $$ = $1;}
     ;
 
 types
-	: CHAR          { $$ = $1; printf("TYPES %d \n", $1); }
-	| SHORT         { $$ = $1; printf("TYPES %d \n", $1); }
-	| INT           { $$ = $1; printf("TYPES %d \n", $1); }
-	| LONG          { $$ = $1; printf("TYPES %d \n", $1); }
-	| FLOAT         { $$ = $1; printf("TYPES %d \n", $1); }
-	| DOUBLE        { $$ = $1; printf("TYPES %d \n", $1); }
-	| SIGNED        { $$ = $1; printf("TYPES %d \n", $1); }
-	| UNSIGNED      { $$ = $1; printf("TYPES %d \n", $1); }
-	| BOOL          { $$ = $1; printf("TYPES %d \n", $1); }
-	| VOID          { $$ = $1; printf("TYPES %d \n", $1); }
-	| IDENTIFIER    { $$ = $1; printf("TYPES %d \n", $1); }
+	: CHAR          { $$ = $1; }
+	| SHORT         { $$ = $1; }
+	| INT           { $$ = $1; }
+	| LONG          { $$ = $1; }
+	| FLOAT         { $$ = $1; }
+	| DOUBLE        { $$ = $1; }
+	| SIGNED        { $$ = $1; }
+	| UNSIGNED      { $$ = $1; }
+	| BOOL          { $$ = $1; }
+	| VOID          { $$ = $1; }
+	| IDENTIFIER    { $$ = $1; }
 	;
 
 pointer
