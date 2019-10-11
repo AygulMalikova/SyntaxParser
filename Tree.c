@@ -32,6 +32,17 @@ struct variable_declaration *variable_declaration(char *type) {
     return node;
 }
 
+struct  math_expr *math_expr(char sign, struct ast *l, struct ast *r) {
+    struct  math_expr *math_expr = malloc(sizeof(struct math_expr));
+    if(!math_expr) {
+        yyerror("out of space");
+        exit(0); }
+    math_expr->nodetype = nodetype;
+    math_expr->l = l;
+    math_expr->r = r;
+    return math_expr;
+}
+
 //
 //struct variable_declaration {
 //    char *type;

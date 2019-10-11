@@ -355,12 +355,12 @@ short_math
 	;
 
 math_expr
- 	: '('math_expr')'
- 	| math_expr '+' math_expr
-	| math_expr '-' math_expr
-	| math_expr '*' math_expr
-	| math_expr '/' math_expr
-	| math_expr '%' math_expr
+ 	: '('math_expr')'                   { $$ = $2; }
+ 	| math_expr '+' math_expr           { $$ = math_expr('+', $1,$3); }
+	| math_expr '-' math_expr           { $$ = math_expr('-', $1,$3); }
+	| math_expr '*' math_expr           { $$ = math_expr('*', $1,$3); }
+	| math_expr '/' math_expr           { $$ = math_expr('/', $1,$3); }
+	| math_expr '%' math_expr           { $$ = math_expr('%', $1,$3); }
 	| value
  	;
 

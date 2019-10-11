@@ -63,15 +63,25 @@ struct l_value {
 };
 
 struct literal {
-
+    int int_value;
+    float float_value;
+    char char_value;
+    char *string_value;
 };
 
 struct FunctionCall {
+    char *name;
+    struct args_list;
+};
 
+struct args_list {
+    struct cast list[];
 };
 
 struct StructCall {
-
+    char *name;
+    char *field;
+    struct StructCall *structCall;
 };
 
 struct value {
@@ -82,12 +92,17 @@ struct value {
 };
 
 struct math_expr {
-
+    char sing;
+    struct math_expr *l;
+    struct math_expr *r;
 };
 
 struct logic_expr {
-
+    char sing;
+    struct logic_expr *l;
+    struct logic_expr *r;
 };
+
 
 struct StructDef {
 
@@ -102,5 +117,6 @@ struct variable_declaration *variable_declaration(char *type);
 struct typechain *typechain();
 
 struct StructDef *StructDef();
+struct math_expr *math_expr();
 
 #endif //SYNTAXPARSER_TREE_H
