@@ -127,7 +127,7 @@ list_initializer
 
 assignment
     :
-	| '=' cast
+    | '=' cast
     ;
 
 typechain
@@ -341,7 +341,7 @@ r_value
 	;
 
 value
-	: literal
+    : literal
     | l_value
     | '&' l_value                        // address
     | FunctionCall

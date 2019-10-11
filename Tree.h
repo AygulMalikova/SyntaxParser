@@ -13,23 +13,59 @@ struct include_files {
     char *name_of_file;
 };
 
+//DONE
 struct variable_declaration {
-    struct typechain typechain;
-    struct inline_declaration inline_declaration;
+    struct typechain *typechain;
+    struct inline_declaration *inline_declaration;
 };
 
+//DONE
 struct inline_declaration {
-    char *name;
-    struct assignment;
-    struct array_declaration;
-    struct inline_declaration* inline_declaration;
-    struct list_initializer list_initializer;
+    struct inline_declaration *inline_declaration;
+    struct initial_declaration *initial_declaration;
 };
 
+//DONE
+struct initial_declaration {
+    char* identifier;
+    struct assignment * assignment;
+    struct array_declaration * array_declaration; // develop
+    struct list_initializer * list_initializer; // develop
+};
+
+//DONE
+struct assignment {
+    struct cast* cast;
+};
+
+//DONE
+struct cast {
+  struct r_value * r_value;
+  struct typechain * typechain;
+  struct cast * cast;
+};
+
+//DONE
 struct typechain {
-    char *types;
-    struct StructDef StructDef;
-    char pointers[];
+    char *type;
+    struct StructDef *StructDef; //develop
+    char *pointers; //maybe should change
+};
+
+//DONE
+struct r_value {
+  struct value * value;
+  int is_null;
+  struct math_expr * math_expr; // develop
+  struct logic_expr * logic_expr; //develop
+};
+
+//DONE
+struct value {
+  struct literal* literal; //develop
+  struct l_value* l_value; //develop
+  int address;
+  struct FunctionCall* functionCall; //develop
 };
 
 struct array_declaration {
@@ -41,19 +77,6 @@ struct array_declaration {
 struct list_initializer {
     struct cast;
     struct list_initializer *list_initializer;
-};
-
-struct cast {
-    struct r_value r_value;
-    char *type;
-    struct cast* cast;
-};
-
-struct r_value {
-    struct value value;
-    char *NULL;
-    struct math_expr math_expr;
-    struct logic_expr logic_expr;
 };
 
 struct l_value {
@@ -84,15 +107,8 @@ struct StructCall {
     struct StructCall *structCall;
 };
 
-struct value {
-    struct l_value l_value;
-    char address;
-    struct literal;
-    struct FunctionCall;
-};
-
 struct math_expr {
-    char sing;
+    char sign;
     struct math_expr *l;
     struct math_expr *r;
 };
@@ -110,11 +126,17 @@ struct StructDef {
 
 //
 struct global_declaration *global_decl();
+
 struct include_files *include_files(char *name_of_file);
 
-struct variable_declaration *variable_declaration(char *type);
-
-struct typechain *typechain();
+struct variable_declaration *variable_declaration(struct typechain *typechain, struct inline_declaration *inline_declaration);
+struct typechain *typechain(char* type, struct StructDef* structdef, char* pointers);
+struct inline_declaration *inline_declaration( struct inline_declaration *inline_declaration, struct initial_declaration *initial_declaration);
+struct initial_declaration *initial_declaration(char* identifier, struct assignment * assignment, struct array_declaration * array_declaration, struct list_initializer * list_initializer);
+struct assignment * assignment(struct cast* cast);
+struct cast* cast(struct r_value * r_value, struct typechain * typechain, struct cast * cast);
+struct r_value* r_value(struct value * value, int is_null, struct math_expr * math_expr, struct logic_expr * logic_expr);
+struct value * value(struct literal* literal, struct l_value* l_value, int address, struct FunctionCall* functionCall);
 
 struct StructDef *StructDef();
 struct math_expr *math_expr();
