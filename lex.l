@@ -74,7 +74,7 @@ L?'(\\.|[^\\'\n])+'	{ count(); return(CONSTANT); }
 0[xX]{H}+{P}{FS}?	{ count(); return(CONSTANT); }
 0[xX]{H}*\.{H}+{P}?{FS}?     { count(); return(CONSTANT); }
 0[xX]{H}+\.{H}*{P}?{FS}?     { count(); return(CONSTANT); }
-'.+'                { count(); return(CHAR); }
+\'(\\.|[^\\'\n])+\'          { count(); return(CHAR); }
 [1-9]{D}*{IS}?    { count(); return(INTEGER_CONSTANT); }
 \"(\\.|[^\\"\n])*\"	{ count(); return(STRING_LITERAL); }
 \<(\\.|[^\\"\n])*\> { count(); return(FILE_LITERAL); }
