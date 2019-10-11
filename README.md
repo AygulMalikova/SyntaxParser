@@ -14,4 +14,4 @@ In the terminal write the commands below
 To run the yacc and lexer
 
 `cd app`  
-`yacc -d grammar.y && flex lex.l && gcc -Wall y.tab.c lex.yy.c -lfl && cat input.txt | ./a.out`
+`yacc -d grammar.y && flex lex.l && gcc -Wall y.tab.c lex.yy.c Tree.c -lfl && cat input.txt | ./a.out`
