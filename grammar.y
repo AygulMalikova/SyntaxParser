@@ -17,7 +17,10 @@
     struct include_files *include_files;
     struct typechain *typechain;
     struct StructDef *StructDef;
+    struct inline_initial_declaration *inline_initial_declaration;
     struct initial_declaration *initial_declaration;
+    struct math_expr *math_expr;
+    struct array_declaration *array_declaration;
 }
 
 %token CONSTANT SIZEOF INCLUDE ENUMERATION_CONSTANT INTEGER_CONSTANT FLOAT_CONSTANT
@@ -27,6 +30,16 @@
 %token XOR_ASSIGN OR_ASSIGN TYPE_NAME DOUBLE_QUOTE HASH DOT  NULL_
 
 %token TYPEDEF EXTERN STATIC AUTO REGISTER INLINE RESTRICT TYPEDEF_NAME
+
+%token STRUCT UNION ENUM ELLIPSIS
+
+%token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
+
+%token LBRACE      //  {
+%token RBRACE      //  }
+%token LPAREN      //  (
+%token RPAREN      //  )
+
 %token <string> IDENTIFIER
 %token <string> CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID BOOL
 %token <string> FILE_LITERAL STRING_LITERAL
@@ -39,15 +52,11 @@
 %type  <StructDef> StructDef
 %type  <include_files> include_files
 %type  <initial_declaration> initial_declaration
+%type  <inline_initial_declaration> inline_initial_declaration
+%type  <math_expr> math_expr
+%type  <array_declaration> array_declaration
 
-%token STRUCT UNION ENUM ELLIPSIS
 
-%token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
-
-%token LBRACE      //  {
-%token RBRACE      //  }
-%token LPAREN      //  (
-%token RPAREN      //  )
 
 %start compilation_unit
 

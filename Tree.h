@@ -16,26 +16,21 @@ struct include_files {
 //DONE
 struct variable_declaration {
     struct typechain *typechain;
+    struct inline_initial_declaration *inline_initial_declaration;
+};
+
+struct inline_initial_declaration {
     struct inline_declaration *inline_declaration;
+    struct inline_initial_declaration* inline_initial_declaration;
 };
 
 //DONE
 struct inline_declaration {
-    struct inline_declaration *inline_declaration;
-    struct initial_declaration *initial_declaration;
-};
+    char *name;
+    struct assignment *assignment;
+    struct array_declaration *array_declaration;
 
-//DONE
-struct initial_declaration {
-    char* identifier;
-    struct assignment * assignment;
-    struct array_declaration * array_declaration; // develop
-    struct list_initializer * list_initializer; // develop
-};
-
-//DONE
-struct assignment {
-    struct cast* cast;
+    struct list_initializer *list_initializer;
 };
 
 //DONE
@@ -77,13 +72,15 @@ struct literal {
 };
 
 struct l_value{
-  //develop
+    char pointers[];
+    char *name;
+    struct StructCall *StructCall;
 };
 
 struct array_declaration {
     char *name;
     char index;
-    struct list_initializer list_initializer;
+    struct list_initializer *list_initializer;
 };
 
 struct list_initializer {
@@ -94,7 +91,7 @@ struct list_initializer {
 struct l_value {
     char pointers[];
     char *name;
-    struct StructCall StructCall;
+    struct StructCall *StructCall;
 };
 
 struct FunctionCall {
@@ -112,6 +109,7 @@ struct StructCall {
     struct StructCall *structCall;
 };
 
+
 struct math_expr {
     char sign;
     struct math_expr *l;
@@ -126,8 +124,162 @@ struct logic_expr {
 
 
 struct StructDef {
+    char *name;
+    struct field_list *field_list;
 
 };
+
+struct field_list {
+    struct field *field;
+    struct field_list *field_list;
+};
+
+struct field {
+    struct typechain *typechain;
+    struct inline_field_names *inline_field_names;
+};
+
+struct inline_field_names {
+    struct inline_field_names *inline_field_names;
+    struct field_name *field_name;
+};
+
+struct field_name {
+    char *name;
+    char index;
+};
+
+
+struct FunctionDef {
+    struct typechain *typechain;
+    char *name;
+    struct param_list *param_list;
+    struct Body;
+};
+
+struct param_list {
+    struct typechain *typechain;
+    char *name;
+    struct param_list *param_list;
+};
+
+struct Body {
+    struct ComplexBody *ComplexBody;
+    struct Statement *Statement;
+};
+
+struct ComplexBody {
+    struct Statement *Statement;
+    struct ComplexBody *ComplexBody;
+};
+
+struct else_body {
+    struct Body *Body;
+};
+
+struct Statement {
+    struct variable_declaration *variable_declaration;
+    struct Expression *Expression;
+    struct if_statement *if_statement;
+    struct for_statement *for_statement;
+    struct while_statement *while_statement;
+    struct FunctionCall *FunctionCall;
+    struct StructDef *StructDef;
+    struct typedef_declaration *typedef_declaration;
+    struct Return *Return;
+};
+
+struct Expression {
+    struct l_value *l_value;
+    struct assignment *assignment;
+    struct short_math *short_math;
+    struct inc_and_dec *inc_and_dec;
+};
+
+struct assignment {
+    struct cast *cast;
+};
+
+struct short_math {
+    char sing;
+    struct r_value *r_value;
+};
+
+struct inc_and_dec {
+    char *operand;
+    struct l_value *l_value;
+};
+
+struct if_statement {
+    struct logic_expr *logic_expr;
+    struct Body *Body;
+    struct else_body *else_body;
+};
+
+struct for_statement {
+    struct for_init *for_init;
+    struct for_condition *for_condition;
+    struct for_actions *for_actions;
+    struct Body *Body;
+};
+
+struct for_init {
+    struct variable_declaration *variable_declaration;
+    struct ExpressionList *ExpressionList;
+};
+
+struct ExpressionList {
+    struct ExpressionList *ExpressionList;
+    struct Expression *Expression;
+};
+
+struct for_condition {
+    struct logic_expr *logic_expr;
+};
+
+struct for_actions {
+    struct ExpressionList *ExpressionList;
+};
+
+struct while_statement {
+    struct logic_expr *logic_expr;
+    struct Body *Body;
+};
+
+struct typedef_declaration {
+    struct typechain *typechain;
+    struct list_identifiers *list_identifiers;
+};
+
+struct list_identifiers {
+    struct list_identifiers *list_identifiers;
+    char pointer;
+    char *name;
+    struct types_list *types_list;
+    struct param_list *param_list;
+};
+
+struct types_list {
+    struct types_list *types_list;
+    struct typechain *typechain;
+    char index;
+};
+
+struct param_list {
+    struct param_list *param_list;
+    struct param *param;
+    char *name;
+};
+
+struct param {
+    struct types_list *types_list;
+    struct param_name *param_name;
+};
+
+struct Return {
+    struct cast *cast;
+};
+
 
 //
 struct global_declaration *global_decl();
