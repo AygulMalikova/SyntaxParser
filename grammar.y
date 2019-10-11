@@ -44,7 +44,8 @@ include_files
 	;
 
 file
-    : FILE_LITERAL                         //#include <header.h>; TODO: #include "header.h";
+    : FILE_LITERAL                      //#include <header.h>;
+	| STRING_LITERAL 					//#include "header.h";
     ;
 
 typedef_declaration

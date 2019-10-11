@@ -1,3 +1,4 @@
+#include "sec.h";
 struct node  
 { 
     int data; 
