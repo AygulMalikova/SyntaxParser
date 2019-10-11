@@ -19,6 +19,7 @@ struct variable_declaration {
     struct inline_initial_declaration *inline_initial_declaration;
 };
 
+//DONE
 struct inline_initial_declaration {
     struct inline_declaration *inline_declaration;
     struct inline_initial_declaration* inline_initial_declaration;
@@ -43,24 +44,24 @@ struct cast {
 //DONE
 struct typechain {
     char *type;
-    struct StructDef *StructDef; //develop
-    struct pointer *pointer; //develop
+    struct StructDef *StructDef;
+    struct pointer *pointer;
 };
 
 //DONE
 struct r_value {
   struct value * value;
   int is_null;
-  struct math_expr * math_expr; // develop
-  struct logic_expr * logic_expr; //develop
+  struct math_expr * math_expr;
+  struct logic_expr * logic_expr;
 };
 
 //DONE
 struct value {
   struct literal* literal;
-  struct l_value* l_value; //develop
+  struct l_value* l_value;
   int address;
-  struct FunctionCall* functionCall; //develop
+  struct FunctionCall* functionCall;
 };
 
 //DONE
@@ -71,57 +72,77 @@ struct literal {
   int int_value;
 };
 
+//DONE
 struct l_value{
-    char pointers[];
+    struct pointer *pointer;
     char *name;
     struct StructCall *StructCall;
 };
 
+//DONE
+struct pointer{
+  struct pointer* pointer;
+};
+
+//DONE
 struct array_declaration {
     char *name;
-    char index;
+    struct index* index;
     struct list_initializer *list_initializer;
 };
 
+//DONE
 struct list_initializer {
-    struct cast;
-    struct list_initializer *list_initializer;
+    struct args_list* args_list;
 };
 
-struct l_value {
-    char pointers[];
-    char *name;
-    struct StructCall *StructCall;
-};
-
+//DONE
 struct FunctionCall {
     char *name;
-    struct args_list;
+    struct args_list* args_list;
 };
 
+//DONE
 struct args_list {
-    struct cast list[];
+    struct cast* arg;
+    struct args_list* args_list;
 };
 
+//DONE
 struct StructCall {
-    char *name;
-    char *field;
-    struct StructCall *structCall;
+    struct StructCall* StructCall;
+    struct field_name* field_name;
+    char* op;
+    struct field_name* dest_field_name;
 };
 
+//DONE
+struct field_name {
+  char * name;
+  struct index * index;
+};
 
+//DONE
+struct index {
+  int integer;
+  char * identifier;
+};
+
+//DONE
 struct math_expr {
     char sign;
     struct math_expr *l;
     struct math_expr *r;
+    struct value* value;
 };
 
+//DONE
 struct logic_expr {
-    char sing;
+    char sign;
     struct logic_expr *l;
     struct logic_expr *r;
+    struct math_expr* value;
 };
-
 
 struct StructDef {
     char *name;
@@ -143,12 +164,6 @@ struct inline_field_names {
     struct inline_field_names *inline_field_names;
     struct field_name *field_name;
 };
-
-struct field_name {
-    char *name;
-    char index;
-};
-
 
 struct FunctionDef {
     struct typechain *typechain;
@@ -207,6 +222,7 @@ struct short_math {
 
 struct inc_and_dec {
     char *operand;
+    int post;
     struct l_value *l_value;
 };
 
@@ -288,6 +304,7 @@ struct include_files *include_files(char *name_of_file);
 
 struct variable_declaration *variable_declaration(struct typechain *typechain, struct inline_declaration *inline_declaration);
 struct typechain *typechain(char* type, struct StructDef* structdef, struct pointer *pointer);
+struct inline_initial_declaration* inline_initial_declaration(struct inline_declaration *inline_declaration, struct inline_initial_declaration* inline_initial_declaration);
 struct inline_declaration *inline_declaration( struct inline_declaration *inline_declaration, struct initial_declaration *initial_declaration);
 struct initial_declaration *initial_declaration(char* identifier, struct assignment * assignment, struct array_declaration * array_declaration, struct list_initializer * list_initializer);
 struct assignment * assignment(struct cast* cast);
@@ -295,8 +312,18 @@ struct cast* cast(struct r_value * r_value, struct typechain * typechain, struct
 struct r_value* r_value(struct value * value, int is_null, struct math_expr * math_expr, struct logic_expr * logic_expr);
 struct value * value(struct literal* literal, struct l_value* l_value, int address, struct FunctionCall* functionCall);
 struct literal * literal(  char * str_value, char char_value, float float_value, int int_value);
+struct l_value* l_value(struct pointer *pointer, char *name, struct StructCall *StructCall);
+struct pointer* pointer(struct pointer * pointer);
+struct StructCall* StructCall(  struct StructCall* StructCall,  struct field_name* field_name,  char* op,  struct field_name* dest_field_name);
+struct field_name* field_name (char * name, struct index * index);
+struct index* index(int integer, char * identifier);
+struct FunctionCall* FunctionCall(char *name, struct args_list* args_list);
+struct args_list* args_list(struct cast* arg, struct args_list* args_list);
+struct math_expr* math_expr (char sign,  struct math_expr *l,  struct math_expr *r,  struct value* value);
+struct array_declaration* array_declaration(char *name,  struct index* index, struct list_initializer *list_initializer);
+struct list_initializer* list_initializer(struct args_list* args_list);
+struct logic_expr* logic_expr(char sign, struct logic_expr *l, struct logic_expr *r, struct math_expr* value);
 
 struct StructDef *StructDef();
-struct math_expr *math_expr();
 
 #endif //SYNTAXPARSER_TREE_H

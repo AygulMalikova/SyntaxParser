@@ -34,6 +34,19 @@ struct variable_declaration *variable_declaration(struct typechain *typechain, s
     return node;
 }
 
+
+struct inline_initial_declaration* inline_initial_declaration(struct inline_declaration *inline_declaration, struct inline_initial_declaration* inline_initial_declaration){
+  struct inline_initial_declaration *node = malloc(sizeof(struct inline_initial_declaration));
+  if(!node) {
+    yyerror("out of space");
+    exit(0);
+  }
+  node->inline_initial_declaration = inline_initial_declaration;
+  node->inline_declaration = inline_declaration;
+//    printf("STROKA4 %s \n", type);
+  return node;
+}
+
 struct typechain *typechain(char* type, struct StructDef* structdef, struct pointer *pointer) {
   struct typechain *node = malloc(sizeof(struct typechain));
   if(!node) {
@@ -139,15 +152,134 @@ struct literal * literal(char * str_value, char char_value, float float_value, i
   return node;
 }
 
-struct  math_expr *math_expr(char sign, struct ast *l, struct ast *r) {
-    struct  math_expr *math_expr = malloc(sizeof(struct math_expr));
-    if(!math_expr) {
-        yyerror("out of space");
-        exit(0); }
-    math_expr->sign = sign;
-    math_expr->l = l;
-    math_expr->r = r;
-    return math_expr;
+struct l_value* l_value(struct pointer *pointer, char *name, struct StructCall *StructCall){
+  struct l_value *node = malloc(sizeof(struct l_value));
+  if(!node) {
+    yyerror("out of space");
+    exit(0);
+  }
+  node->name = name;
+  node->pointer = pointer;
+  node->StructCall = StructCall;
+//    printf("STROKA4 %s \n", type);
+  return node;
+}
+
+struct pointer* pointer(struct pointer * pointer){
+  struct pointer *node = malloc(sizeof(struct pointer));
+  if(!node) {
+    yyerror("out of space");
+    exit(0);
+  }
+  node->pointer = pointer;
+//    printf("STROKA4 %s \n", type);
+  return node;
+}
+
+struct StructCall* StructCall(  struct StructCall* StructCall,  struct field_name* field_name,  char* op,  struct field_name* dest_field_name)
+{
+  struct StructCall *node = malloc(sizeof(struct StructCall));
+  if(!node) {
+    yyerror("out of space");
+    exit(0);
+  }
+  node->StructCall = StructCall;
+  node->dest_field_name = dest_field_name;
+  node->field_name = field_name;
+  node->op = op;
+//    printf("STROKA4 %s \n", type);
+  return node;
+}
+
+struct field_name* field_name (char * name, struct index * index)
+{
+  struct field_name *node = malloc(sizeof(struct field_name));
+  if(!node) {
+    yyerror("out of space");
+    exit(0);
+  }
+  node->name = name;
+  node->index = index;
+//    printf("STROKA4 %s \n", type);
+  return node;
+}
+
+struct index* index(int integer, char * identifier){
+  struct index *node = malloc(sizeof(struct index));
+  if(!node) {
+    yyerror("out of space");
+    exit(0);
+  }
+  node->integer = integer;
+  node->identifier = identifier;
+//    printf("STROKA4 %s \n", type);
+  return node;
+}
+
+struct FunctionCall* FunctionCall(char *name, struct args_list* args_list)
+{
+  struct FunctionCall *node = malloc(sizeof(struct FunctionCall));
+  if(!node) {
+    yyerror("out of space");
+    exit(0);
+  }
+  node->name = name;
+  node->args_list = args_list;
+//    printf("STROKA4 %s \n", type);
+  return node;
+}
+
+struct args_list* args_list(struct cast* arg, struct args_list* args_list){
+  struct args_list *node = malloc(sizeof(struct args_list));
+  if(!node) {
+    yyerror("out of space");
+    exit(0);
+  }
+  node->arg = arg;
+  node->args_list = args_list;
+//    printf("STROKA4 %s \n", type);
+  return node;
+}
+
+struct math_expr* math_expr (char sign,  struct math_expr *l,  struct math_expr *r,  struct value* value)
+{
+  struct math_expr *node = malloc(sizeof(struct math_expr));
+  if(!node) {
+    yyerror("out of space");
+    exit(0);
+  }
+  node->value = value;
+  node->l = l;
+  node->r = r;
+  node->sign = sign;
+//    printf("STROKA4 %s \n", type);
+  return node;
+}
+
+struct list_initializer* list_initializer(struct args_list* args_list)
+{
+  struct list_initializer *node = malloc(sizeof(struct list_initializer));
+  if(!node) {
+    yyerror("out of space");
+    exit(0);
+  }
+  node->args_list = args_list;
+//    printf("STROKA4 %s \n", type);
+  return node;
+}
+
+struct logic_expr* logic_expr(char sign, struct logic_expr *l, struct logic_expr *r, struct math_expr* value){
+  struct logic_expr *node = malloc(sizeof(struct logic_expr));
+  if(!node) {
+    yyerror("out of space");
+    exit(0);
+  }
+  node->sign = sign;
+  node->l = l;
+  node->r = r;
+  node->value = value;
+//    printf("STROKA4 %s \n", type);
+  return node;
 }
 
 //
