@@ -9,10 +9,10 @@ struct node* newNode(int data) {
 
   struct node* node = (struct node*)malloc(); 
   
-  if(i>10){int i = 0;}else{int i = 10; call();}
-  for(arr[i] = arr[i]->arr[i].rt; i < 10; i++);
   node->data = data; 
-  *a = 9;
+  if (a && (b-2)) {
+    r->l = &l;
+  }
   node->left = NULL; 
   node->right = NULL; 
   return node; 

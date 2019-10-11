@@ -97,7 +97,7 @@ list_initializer
 
 assignment
     :
-	| '=' cast r_value
+	| '=' cast
     ;
 
 typechain
@@ -126,13 +126,13 @@ pointer
     ;
 
 cast
-	: '(' typechain ')'
-	|
+	: r_value
+	| '(' typechain ')' cast
 	;
 
 args_list
-    : args_list ',' cast arg
-	| cast arg
+    : args_list ',' cast
+	| cast
     ;
 
 arg
@@ -155,7 +155,7 @@ ComplexBody
 	;
 
 Return
-    : RETURN cast arg
+    : RETURN cast
     | RETURN
     ;
 
@@ -173,12 +173,16 @@ Statement
 	;
 
 literal
-    : CONSTANT
-    | INTEGER_CONSTANT
-	| FLOAT_CONSTANT
+    : count_literal
 	| CHAR
 	| STRING_LITERAL
     ;
+
+count_literal
+	: CONSTANT
+    | INTEGER_CONSTANT
+	| FLOAT_CONSTANT
+	;
 
 Expression
 	: l_value assignment
@@ -311,13 +315,6 @@ inc_and_dec
 	| l_value DEC_OP
 	;
 
-value
-	: l_value
-	| literal
-	| StructCall
-	| FunctionCall
-	;
-
 l_value
 	: pointer field_name
 	| field_name
@@ -326,22 +323,15 @@ l_value
 	;
 
 r_value
-	: NULL_
-    | literal
-    | CHAR
-    | STRING_LITERAL       // "123Hello"
-    | l_value
-    | '&' l_value                        // address
-    | FunctionCall
-    | math_expr
-    | logic_expr
+	: value
+	| NULL_
+	| literal
+	| math_expr
+	| logic_expr
 	;
 
 value
-	: NULL_
-    | literal
-    | CHAR
-    | STRING_LITERAL       // "123Hello"
+	: count_literal
     | l_value
     | '&' l_value                        // address
     | FunctionCall
@@ -376,6 +366,7 @@ logic_expr
 	| logic_expr '<' logic_expr
 	| logic_expr '>' logic_expr
 	| value
+	| math_expr
 	;
 %%
 //subroutines
