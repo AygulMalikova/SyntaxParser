@@ -97,17 +97,7 @@ list_initializer
 
 assignment
     :
-	| '=' NULL_
-    | '=' cast literal
-    | '=' cast CHAR
-    | '=' cast STRING_LITERAL       // "123Hello"
-    | '=' cast field_name
-    | '=' cast '&' field_name                        // address
-    | '=' cast pointer field_name                        // address
-    | '=' cast FunctionCall
-    | '=' cast StructCall
-    | '=' cast math_expr
-    | '=' cast logic_expr
+	| '=' cast r_value
     ;
 
 typechain
@@ -178,6 +168,7 @@ Statement
 	| FunctionCall ';'
 	| StructDef ';'
 	| Return ';'
+	| ';'
 	//| typedef_declaration ';'
 	;
 
@@ -190,8 +181,8 @@ literal
     ;
 
 Expression
-	: StructCall assignment
-	| field_name assignment
+	: l_value assignment
+	| inc_and_dec
 	;
 
 index
@@ -282,14 +273,15 @@ for
 	: FOR '(' for_init ';' for_condition ';' for_actions ')' Body
 	;
 
-ArgumentList
-    :                  Expression
-    | ArgumentList ',' Expression
+ExpressionList
+    :                    Expression
+    | ExpressionList ',' Expression
     ;
 
 for_init
 	:
-	| variable_declaration //assignments without types
+	| variable_declaration
+	| ExpressionList
 	;
 
 for_condition
@@ -299,7 +291,7 @@ for_condition
 
 for_actions
 	:
-	| ArgumentList
+	| ExpressionList
 	;
 
 // math
@@ -312,11 +304,47 @@ for_actions
 //	| IDENTIFIER DIV_ASSIGN value
 //
 
+inc_and_dec
+	: INC_OP l_value
+	| DEC_OP l_value
+	| l_value INC_OP
+	| l_value DEC_OP
+	;
+
 value
-	: IDENTIFIER
+	: l_value
 	| literal
 	| StructCall
 	| FunctionCall
+	;
+
+l_value
+	: pointer field_name
+	| field_name
+	| pointer StructCall
+	| StructCall
+	;
+
+r_value
+	: NULL_
+    | literal
+    | CHAR
+    | STRING_LITERAL       // "123Hello"
+    | l_value
+    | '&' l_value                        // address
+    | FunctionCall
+    | math_expr
+    | logic_expr
+	;
+
+value
+	: NULL_
+    | literal
+    | CHAR
+    | STRING_LITERAL       // "123Hello"
+    | l_value
+    | '&' l_value                        // address
+    | FunctionCall
 	;
 
 short_math
@@ -326,13 +354,6 @@ short_math
 	|  SUB_ASSIGN value
 	|  MUL_ASSIGN value
 	|  DIV_ASSIGN value
-
-inc_and_dec
-	: INC_OP IDENTIFIER
-	| DEC_OP IDENTIFIER
-	| IDENTIFIER INC_OP
-	| IDENTIFIER DEC_OP
-	;
 
 math_expr
  	: '('math_expr')'
@@ -354,11 +375,6 @@ logic_expr
 	| logic_expr NE_OP logic_expr
 	| logic_expr '<' logic_expr
 	| logic_expr '>' logic_expr
-	| logic_var
-	;
-
-logic_var
-	: BOOL
 	| value
 	;
 %%
