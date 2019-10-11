@@ -34,7 +34,7 @@ struct variable_declaration *variable_declaration(struct typechain *typechain, s
     return node;
 }
 
-struct typechain *typechain(char* type, struct StructDef* structdef, char* pointers) {
+struct typechain *typechain(char* type, struct StructDef* structdef, struct pointer *pointer) {
   struct typechain *node = malloc(sizeof(struct typechain));
   if(!node) {
     yyerror("out of space");
@@ -42,7 +42,7 @@ struct typechain *typechain(char* type, struct StructDef* structdef, char* point
   }
   node->type = type;
   node->StructDef = structdef;
-  node->pointers = pointers;
+  node->pointer = pointer;
 //    printf("STROKA4 %s \n", type);
   return node;
 }
@@ -121,6 +121,20 @@ struct value * value(struct literal* literal, struct l_value* l_value, int addre
   node->l_value = l_value;
   node->address = address;
   node->functionCall = functionCall;
+//    printf("STROKA4 %s \n", type);
+  return node;
+}
+
+struct literal * literal(char * str_value, char char_value, float float_value, int int_value){
+  struct literal *node = malloc(sizeof(struct literal));
+  if(!node) {
+    yyerror("out of space");
+    exit(0);
+  }
+  node->str_value = str_value;
+  node->char_value = char_value;
+  node->float_value = float_value;
+  node->int_value = int_value;
 //    printf("STROKA4 %s \n", type);
   return node;
 }

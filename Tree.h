@@ -49,7 +49,7 @@ struct cast {
 struct typechain {
     char *type;
     struct StructDef *StructDef; //develop
-    char *pointers; //maybe should change
+    struct pointer *pointer; //develop
 };
 
 //DONE
@@ -62,10 +62,22 @@ struct r_value {
 
 //DONE
 struct value {
-  struct literal* literal; //develop
+  struct literal* literal;
   struct l_value* l_value; //develop
   int address;
   struct FunctionCall* functionCall; //develop
+};
+
+//DONE
+struct literal {
+  char * str_value;
+  char char_value;
+  float float_value;
+  int int_value;
+};
+
+struct l_value{
+  //develop
 };
 
 struct array_declaration {
@@ -83,13 +95,6 @@ struct l_value {
     char pointers[];
     char *name;
     struct StructCall StructCall;
-};
-
-struct literal {
-    int int_value;
-    float float_value;
-    char char_value;
-    char *string_value;
 };
 
 struct FunctionCall {
@@ -130,13 +135,14 @@ struct global_declaration *global_decl();
 struct include_files *include_files(char *name_of_file);
 
 struct variable_declaration *variable_declaration(struct typechain *typechain, struct inline_declaration *inline_declaration);
-struct typechain *typechain(char* type, struct StructDef* structdef, char* pointers);
+struct typechain *typechain(char* type, struct StructDef* structdef, struct pointer *pointer);
 struct inline_declaration *inline_declaration( struct inline_declaration *inline_declaration, struct initial_declaration *initial_declaration);
 struct initial_declaration *initial_declaration(char* identifier, struct assignment * assignment, struct array_declaration * array_declaration, struct list_initializer * list_initializer);
 struct assignment * assignment(struct cast* cast);
 struct cast* cast(struct r_value * r_value, struct typechain * typechain, struct cast * cast);
 struct r_value* r_value(struct value * value, int is_null, struct math_expr * math_expr, struct logic_expr * logic_expr);
 struct value * value(struct literal* literal, struct l_value* l_value, int address, struct FunctionCall* functionCall);
+struct literal * literal(  char * str_value, char char_value, float float_value, int int_value);
 
 struct StructDef *StructDef();
 struct math_expr *math_expr();
