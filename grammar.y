@@ -40,12 +40,12 @@ global_declaration
     ;
 
 include_files
-	: HASH INCLUDE file ';'
+	: HASH INCLUDE file
 	;
 
 file
-    : FILE_LITERAL                      //#include <header.h>;
-	| STRING_LITERAL 					//#include "header.h";
+    : FILE_LITERAL                      //#include <header.h>
+	| STRING_LITERAL 					//#include "header.h"
     ;
 
 typedef_declaration
@@ -168,16 +168,12 @@ Statement
 	;
 
 literal
-    : count_literal
+    : CONSTANT
+    | INTEGER_CONSTANT
+	| FLOAT_CONSTANT
 	| CHAR
 	| STRING_LITERAL
     ;
-
-count_literal
-	: CONSTANT
-    | INTEGER_CONSTANT
-	| FLOAT_CONSTANT
-	;
 
 Expression
 	: l_value assignment
@@ -274,8 +270,8 @@ for
 	;
 
 ExpressionList
-    :                    Expression
-    | ExpressionList ',' Expression
+    : ExpressionList ',' Expression
+    | Expression
     ;
 
 for_init
@@ -313,13 +309,12 @@ l_value
 r_value
 	: value
 	| NULL_
-	| literal
 	| math_expr
 	| logic_expr
 	;
 
 value
-	: count_literal
+	: literal
     | l_value
     | '&' l_value                        // address
     | FunctionCall
@@ -344,6 +339,7 @@ math_expr
 
 logic_expr
 	: '(' logic_expr ')'
+	| '!' logic_expr
 	| logic_expr AND_OP logic_expr
 	| logic_expr OR_OP logic_expr
 	| logic_expr LE_OP logic_expr
