@@ -109,7 +109,6 @@ L?\"(\\.|[^\\"\n])*\"	{ count(); return(STRING_LITERAL); }
 ")"			{ count(); return(')'); }
 ("["|"<:")		{ count(); return('['); }
 ("]"|":>")		{ count(); return(']'); }
-"."			{ count(); return('.'); }
 "&"			{ count(); return('&'); }
 "!"			{ count(); return('!'); }
 "~"			{ count(); return('~'); }

@@ -1,88 +1,33 @@
-#include <akfg.h>;
+struct node  
+{ 
+    int data; 
+    struct node *left; 
+    struct node *right; 
+}; 
 
-int d = 1234;
-int k = 1;
+struct node* newNode(int data) {
 
-float b = 13.34;
+  struct node* node = (struct node*)malloc(); 
+  
 
-char a = 'a';
+  node->data = data; 
 
-int *p;
-char *str = NULL;
-char *str = "Hello";
-char *str = "123Hello";
+  node->left = NULL; 
+  node->right = NULL; 
+  return node; 
+} 
+  
+  
+int main() 
+{ 
 
-int **ptr1 = &ptr2;
+  struct node *root = newNode(1);   
 
-int pointer = *str;
+  root->left        = newNode(2); 
+  root->right       = newNode(3); 
 
-int array[100];
-int array[] = {7, 8, 134};
-int array[5] = {0};
-int array[4] = {'c', 'd', '-', '%'};
+  root->left->left  = newNode(4); 
 
-
-int sum(int k, int m)
-{
-    sum =  k;
-    ip.f = &var;
-    a = 'b';
-    a = 25 * 19 - (21 + 10)/2;
-    array1[4] = 2;
-    array2[n] = NULL;
-    array2[n] = "String";
-    k += 2;
-    l = 1 - (k + 2);
-    _Bool asd = false;
-    asd =  (3 < 2) ;
-    return sum;
+  getchar(); 
+  return 0; 
 }
-
-int l = 233 - 9;
-
-int main( void )
-{
-  int a = 0;
-  return 0;
-}
-
-int signaturr();
-int l = main();
-float l2 = sum(2,3+3);
-
-struct persone {
-  char firstname[20];
-  char lastname[20];
-  struct date bd;
-};
-
-
-struct persone p = {"Name", "Surname", 2+2};
-
-char *okk = p.lastname ;
-
-char nook = p->lastname;
-
-int k = (int) sum(sum());
-
-typedef struct {
-   char name[20];
-   int liga;
-   float ochki;
-}f_club;
-
-typedef int length;
-typedef struct MyStruct newtype;
-
-typedef struct {
-    int data1;
-    char data2;
-} newtype;
-
-typedef void (*printer_t)(int);
-
-typedef int (*function)(int a, int b);
-
-typedef int *intptr;
-
-int k = 0;

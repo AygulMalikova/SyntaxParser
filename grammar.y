@@ -26,8 +26,6 @@
 
 %%
 //rules
-
-//include
 compilation_unit
     : global_declaration
     | compilation_unit global_declaration
@@ -36,9 +34,9 @@ compilation_unit
 global_declaration
     : include_files
     | FunctionDef
-    | variable_declaration
+    | variable_declaration ';'
     | StructDef ';'
-    | typedef_declaration ';'
+    //| typedef_declaration ';'
     ;
 
 include_files
@@ -49,39 +47,20 @@ file
     : FILE_LITERAL                         //#include <header.h>; TODO: #include "header.h";
     ;
 
-variable_declaration
-    : typechain inline_initial_declaration ';'
-    ;
 
-inline_initial_declaration
-    : initial_declaration
-    | inline_initial_declaration ',' initial_declaration
-    ;
-
-initial_declaration
-	: IDENTIFIER init_assignment                               // primitives
-	| array_declaration                                   // arrays
-	| IDENTIFIER list_initializer
-	;
-
-array_declaration
-    : IDENTIFIER '[' ']' list_initializer
-    | IDENTIFIER '[' index ']' list_initializer      // int array[10];
-    ;
 
 typedef_declaration
     : TYPEDEF old_name new_name
-    | StructInit
     ;
 
 function_redeclaration
-	:'(' pointer IDENTIFIER ')' '(' types ')'
-	|'(' pointer IDENTIFIER ')' '(' parameter_list ')'
+	:'(' pointer IDENTIFIER ')' '(' typechain ')'
+	|'(' pointer IDENTIFIER ')' '(' param_list ')'
 	;
 
 old_name
 	: IDENTIFIER
-	| types
+	| typechain
 	| VOID
 	;
 
@@ -90,28 +69,31 @@ new_name
 	| pointer IDENTIFIER
 	| function_redeclaration
 	;
+variable_declaration
+    : typechain inline_initial_declaration
+    ;
 
+inline_initial_declaration
+    : initial_declaration
+    | inline_initial_declaration ',' initial_declaration
+    ;
 
+initial_declaration
+	: IDENTIFIER assignment                               // primitives
+	| array_declaration                                   // arrays
+	| IDENTIFIER list_initializer
+	;
+
+array_declaration
+    : IDENTIFIER '[' ']' list_initializer
+    | IDENTIFIER '[' index ']' list_initializer      // int array[10];
+	| IDENTIFIER '[' index ']'
+    ;
 
 list_initializer
 	: '=' '{' args_list '}'
-	|
+	| '=' '{' '}'
 	;
-
-init_assignment
-    :
-	| '=' NULL_
-    | '=' cast literal
-    | '=' cast CHAR
-    | '=' cast STRING_LITERAL       // "123Hello"
-    | '=' cast IDENTIFIER
-    | '=' cast '&' IDENTIFIER                        // address
-    | '=' cast pointer IDENTIFIER                        // address
-    | '=' cast FunctionCall
-    | '=' cast StructCall
-    | '=' cast math_expr
-    | '=' cast logic_expr
-    ;
 
 assignment
     :
@@ -119,14 +101,13 @@ assignment
     | '=' cast literal
     | '=' cast CHAR
     | '=' cast STRING_LITERAL       // "123Hello"
-    | '=' cast IDENTIFIER
-    | '=' cast '&' IDENTIFIER                        // address
-    | '=' cast pointer IDENTIFIER                        // address
+    | '=' cast field_name
+    | '=' cast '&' field_name                        // address
+    | '=' cast pointer field_name                        // address
     | '=' cast FunctionCall
     | '=' cast StructCall
     | '=' cast math_expr
     | '=' cast logic_expr
-    | short_math
     ;
 
 typechain
@@ -146,6 +127,7 @@ types
 	| SIGNED
 	| UNSIGNED
 	| BOOL
+	| VOID
 	;
 
 pointer
@@ -158,24 +140,9 @@ cast
 	|
 	;
 
-FunctionDef
-    : VOID IDENTIFIER '(' parameter_list ')' CompoundStmt
-    | typechain IDENTIFIER '(' parameter_list ')' CompoundStmt
-    | typechain IDENTIFIER '(' VOID ')' CompoundStmt
-    | typechain IDENTIFIER '('  ')' CompoundStmt
-    | typechain IDENTIFIER '(' ')' ';'
-    ;
-
-CompoundStmt
-	: '{' FunctionBody '}'
-	| '{' FunctionBody Return '}'
-	;
-
 args_list
     : args_list ',' cast arg
-    | cast arg
-    | math_expr
-    | logic_expr
+	| cast arg
     ;
 
 arg
@@ -187,50 +154,32 @@ arg
 	| logic_expr
 	;
 
-value
-	: IDENTIFIER
-	| literal
-	| StructCall
-	| FunctionCall
+Body
+	: '{' ComplexBody '}'
+	| Statement
 	;
 
-FunctionCall
-    : IDENTIFIER '(' args_list ')'
-    | IDENTIFIER '(' ')'
-    ;
-
-parameter_list
-    : parameter_list ',' param
-    | param
-    ;
-
-param
-    : typechain IDENTIFIER
-    | typechain array_declaration
-    | cast StructInit
-    ;
-
-FunctionBody
-	: FunctionBody FunctPart
-	| FunctPart
+ComplexBody
+	: Statement ComplexBody
+	|
 	;
 
-FunctPart
-	: variable_declaration
-	| Expression
+Return
+    : RETURN cast arg
+    | RETURN
+    ;
+
+Statement
+	: variable_declaration ';'
+	| Expression ';'
 	| if
 	| for
 	| while
-	| FunctionCall
-	| StructCall
-	| ';'
+	| FunctionCall ';'
+	| StructDef ';'
+	| Return ';'
+	//| typedef_declaration ';'
 	;
-
-
-Return
-    : RETURN cast arg ';'
-    | RETURN ';'
-    ;
 
 literal
     : CONSTANT
@@ -240,66 +189,9 @@ literal
 	| STRING_LITERAL
     ;
 
-Relation
-	: logic_expr
-	;
-
-Statement
-	: variable_declaration ';'
-	| Expression ';'
-	| if ';'
-	| for ';'
-	| while ';'
-	| FunctionCall ';'
-	| StructDef ';'
-	| StructInit ';'
-	| FunctionDef ';'
-	| typedef_declaration ';'
-	;
-
-StructParam
-    : typechain IDENTIFIER ';'
-    | typechain array_declaration ';'
-    | StructInit ';'
-    ;
-
-fields_list
-    : fields_list StructParam
-    | StructParam
-	;
-
-StructDef
-	: STRUCT IDENTIFIER '{' fields_list '}'
-	| STRUCT '{' fields_list '}'
-	| STRUCT IDENTIFIER
-	| TYPEDEF STRUCT IDENTIFIER '{' fields_list '}'
-	| TYPEDEF STRUCT '{' '}' IDENTIFIER
-	| TYPEDEF STRUCT '{'fields_list '}' IDENTIFIER
-    ;
-
-StructInit
-	: STRUCT IDENTIFIER IDENTIFIER '=' '{' args_list '}'
-	| STRUCT IDENTIFIER IDENTIFIER
-	| TYPEDEF STRUCT IDENTIFIER IDENTIFIER
-	;
-
-StructCall
-	: StructName DOT StructField
-	| StructName PTR_OP StructField
-	;
-
-StructName
-	: IDENTIFIER
-	;
-
-StructField
-	: IDENTIFIER
-	;
-
 Expression
-	: IDENTIFIER assignment ';'
-	| StructCall assignment ';'
-	| IDENTIFIER '[' index ']' assignment ';'
+	: StructCall assignment
+	| field_name assignment
 	;
 
 index
@@ -307,37 +199,102 @@ index
 	| IDENTIFIER
 	;
 
-else_body
-	:
-	| ELSE Statement
-	;
-
-if
-	: IF '(' Relation ')' Statement else_body
-	;
-
-while
-	: WHILE '(' Relation ')' Statement
-	;
-
-zaglushka
-    :
+// function
+FunctionDef
+    : typechain IDENTIFIER '(' param_list ')' Body
+    | typechain IDENTIFIER '(' VOID ')' Body
+    | typechain IDENTIFIER '(' ')' Body
     ;
 
+param_list
+    : param_list ',' param
+    | typechain field_name
+	;
+
+param
+    : typechain param_name
+	| param_name
+    ;
+
+param_name
+	: field_name
+	| IDENTIFIER '['']'
+	;
+
+FunctionCall
+    : IDENTIFIER '(' args_list ')'
+	| IDENTIFIER '(' ')'
+    ;
+
+// struct
+StructDef
+	: STRUCT IDENTIFIER '{' field_list '}'
+	| STRUCT '{' field_list '}'
+	| STRUCT IDENTIFIER
+	//| TYPEDEF STRUCT IDENTIFIER '{' field_list '}'
+	//| TYPEDEF STRUCT '{' '}' IDENTIFIER
+	//| TYPEDEF STRUCT '{'field_list '}' IDENTIFIER
+    ;
+
+StructCall
+	: StructCall DOT field_name
+	| StructCall PTR_OP field_name
+	| field_name DOT field_name
+	| field_name PTR_OP field_name
+	;
+
+field_list
+    : field ';' field_list
+    |
+	;
+
+field
+    : typechain inline_field_names
+    ;
+
+inline_field_names
+    : inline_field_names ',' field_name
+    | field_name
+    ;
+
+field_name
+	: IDENTIFIER
+	| IDENTIFIER '[' index ']'
+	;
+
+// if statement
+if
+	: IF '(' logic_expr ')' Body else_body
+	;
+
+else_body
+	:
+	| ELSE Body
+	;
+
+// while loop
+while
+	: WHILE '(' logic_expr ')' Body
+	;
+
+// for loop
+for
+	: FOR '(' for_init ';' for_condition ';' for_actions ')' Body
+	;
+
 ArgumentList
-    :                    Expression
+    :                  Expression
     | ArgumentList ',' Expression
     ;
 
 for_init
 	:
-	| variable_declaration
-	| initial_declaration
+	| variable_declaration //assignments without types
 	;
 
 for_condition
 	:
-	| Relation
+	| logic_expr
 	;
 
 for_actions
@@ -345,10 +302,7 @@ for_actions
 	| ArgumentList
 	;
 
-for
-	: FOR '(' for_init ';' for_condition ';' for_actions ')' Statement
-	;
-//
+// math
 //short_math
 //	: IDENTIFIER INC_OP
 //	| IDENTIFIER DEC_OP
@@ -357,6 +311,14 @@ for
 //	| IDENTIFIER MUL_ASSIGN value
 //	| IDENTIFIER DIV_ASSIGN value
 //
+
+value
+	: IDENTIFIER
+	| literal
+	| StructCall
+	| FunctionCall
+	;
+
 short_math
 	:  INC_OP
 	|  DEC_OP
@@ -364,6 +326,13 @@ short_math
 	|  SUB_ASSIGN value
 	|  MUL_ASSIGN value
 	|  DIV_ASSIGN value
+
+inc_and_dec
+	: INC_OP IDENTIFIER
+	| DEC_OP IDENTIFIER
+	| IDENTIFIER INC_OP
+	| IDENTIFIER DEC_OP
+	;
 
 math_expr
  	: '('math_expr')'
@@ -374,7 +343,6 @@ math_expr
 	| math_expr '%' math_expr
 	| value
  	;
-
 
 logic_expr
 	: '(' logic_expr ')'
