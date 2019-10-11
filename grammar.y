@@ -36,7 +36,7 @@ global_declaration
     | FunctionDef
     | variable_declaration ';'
     | StructDef ';'
-    //| typedef_declaration ';'
+    | typedef_declaration ';'
     ;
 
 include_files
@@ -47,28 +47,30 @@ file
     : FILE_LITERAL                         //#include <header.h>; TODO: #include "header.h";
     ;
 
-
-
 typedef_declaration
-    : TYPEDEF old_name new_name
+    : TYPEDEF typechain list_identifiers
     ;
 
-function_redeclaration
-	:'(' pointer IDENTIFIER ')' '(' typechain ')'
-	|'(' pointer IDENTIFIER ')' '(' param_list ')'
+list_identifiers
+	: list_identifiers ',' IDENTIFIER
+	| list_identifiers ',' '(' '*' IDENTIFIER ')' '('')'
+	| list_identifiers ',' '(' '*' IDENTIFIER ')' '('types_list')'
+	| list_identifiers ',' '(' '*' IDENTIFIER ')' '('param_list')'
+	| '(' '*' IDENTIFIER ')' '('')'
+	| '(' '*' IDENTIFIER ')' '('types_list')'
+	| '(' '*' IDENTIFIER ')' '('param_list')'
+	| IDENTIFIER
 	;
 
-old_name
-	: IDENTIFIER
+types_list
+	: types_list ',' typechain
+	| types_list ',' typechain '[' ']'
+	| types_list ',' typechain '[' index ']'
+	| typechain '[' ']'
+	| typechain '[' index ']'
 	| typechain
-	| VOID
 	;
 
-new_name
-	: IDENTIFIER
-	| pointer IDENTIFIER
-	| function_redeclaration
-	;
 variable_declaration
     : typechain inline_initial_declaration
     ;
@@ -118,6 +120,7 @@ types
 	| UNSIGNED
 	| BOOL
 	| VOID
+	| IDENTIFIER
 	;
 
 pointer
@@ -134,15 +137,6 @@ args_list
     : args_list ',' cast
 	| cast
     ;
-
-arg
-	: IDENTIFIER
-	| literal
-	| StructCall
-	| FunctionCall
-	| math_expr
-	| logic_expr
-	;
 
 Body
 	: '{' ComplexBody '}'
@@ -167,9 +161,9 @@ Statement
 	| while
 	| FunctionCall ';'
 	| StructDef ';'
+	| typedef_declaration ';'
 	| Return ';'
 	| ';'
-	//| typedef_declaration ';'
 	;
 
 literal

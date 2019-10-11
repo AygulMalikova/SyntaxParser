@@ -4,7 +4,7 @@ struct node
     struct node *left; 
     struct node *right; 
 }; 
-
+typedef int some;
 struct node* newNode(int data) {
 
   struct node* node = (struct node*)malloc(); 
@@ -13,6 +13,8 @@ struct node* newNode(int data) {
   if (a && (b-2)) {
     r->l = &l;
   }
+  some i = 10;
+  typedef int (*some)(int, char*, some), a, (*r)();
   arr[i]->a /= (12 + (13));
   node->left = NULL; 
   node->right = NULL; 
