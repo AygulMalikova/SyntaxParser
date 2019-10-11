@@ -1,4 +1,11 @@
 %{
+    #include <stdio.h>
+    #include "Tree.c"
+
+
+    #ifndef YYSTYPE
+    # define YYSTYPE char*
+    #endif
     int yylex();
     void yyerror(const char *s);
 %}
@@ -27,7 +34,7 @@
 %%
 //rules
 compilation_unit
-    : global_declaration
+    : global_declaration        { $$ = global_decl(); }
     | compilation_unit global_declaration
 	;
 
@@ -44,8 +51,8 @@ include_files
 	;
 
 file
-    : FILE_LITERAL                      //#include <header.h>
-	| STRING_LITERAL 					//#include "header.h"
+    : FILE_LITERAL                      { $$ = include_files($1); printf("STROKA3 %s \n", $1);} //#include <header.h>
+	| STRING_LITERAL 				    { $$ = include_files($1); } //#include "header.h"
     ;
 
 typedef_declaration
@@ -73,7 +80,7 @@ types_list
 	;
 
 variable_declaration
-    : typechain inline_initial_declaration
+    : typechain inline_initial_declaration               { $$ = variable_declaration($1); printf("TYPE %s \n", $1);}
     ;
 
 inline_initial_declaration
@@ -111,17 +118,17 @@ typechain
     ;
 
 types
-	: CHAR
-	| SHORT
-	| INT
-	| LONG
-	| FLOAT
-	| DOUBLE
-	| SIGNED
-	| UNSIGNED
-	| BOOL
-	| VOID
-	| IDENTIFIER
+	: CHAR          { $$ = $1; printf("TYPES %d \n", $1); }
+	| SHORT         { $$ = $1; printf("TYPES %d \n", $1); }
+	| INT           { $$ = $1; printf("TYPES %d \n", $1); }
+	| LONG          { $$ = $1; printf("TYPES %d \n", $1); }
+	| FLOAT         { $$ = $1; printf("TYPES %d \n", $1); }
+	| DOUBLE        { $$ = $1; printf("TYPES %d \n", $1); }
+	| SIGNED        { $$ = $1; printf("TYPES %d \n", $1); }
+	| UNSIGNED      { $$ = $1; printf("TYPES %d \n", $1); }
+	| BOOL          { $$ = $1; printf("TYPES %d \n", $1); }
+	| VOID          { $$ = $1; printf("TYPES %d \n", $1); }
+	| IDENTIFIER    { $$ = $1; printf("TYPES %d \n", $1); }
 	;
 
 pointer

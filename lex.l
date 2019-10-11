@@ -8,6 +8,11 @@ IS                      ((u|U)|(u|U)?(l|L|ll|LL)|(l|L|ll|LL)(u|U))
 
 %{
 #include <stdio.h>
+
+#ifndef YYSTYPE
+# define YYSTYPE char*
+#endif
+
 #include "y.tab.h"
 
 extern int sym_type(const char *);  /* returns type from symbol table */
@@ -39,7 +44,7 @@ static int check_type();
 "goto"			{ count(); return(GOTO); }
 "if"			{ count(); return(IF); }
 "inline"		{ count(); return(INLINE); }
-int			    { count(); return(INT); }
+"int"			{ count(); return(INT); }
 "include"		{ count(); return(INCLUDE); }
 "long"			{ count(); return(LONG); }
 "register"		{ count(); return(REGISTER); }
