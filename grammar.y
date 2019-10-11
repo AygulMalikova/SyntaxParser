@@ -18,6 +18,18 @@
     struct typechain *typechain;
     struct StructDef *StructDef;
     struct initial_declaration *initial_declaration;
+    struct math_expr *math_expr
+
+
+    //start
+    struct array_declaration *array_declaration;
+    struct cast *cast;
+    struct r_value *r_value;
+    struct l_value *l_value;
+    struct literal *literal;
+    struct functioncall *functioncall;
+    struct StructCall *StructCall;
+    struct value *value;
 }
 
 %token CONSTANT SIZEOF INCLUDE ENUMERATION_CONSTANT INTEGER_CONSTANT FLOAT_CONSTANT
@@ -115,9 +127,9 @@ initial_declaration
 	;
 
 array_declaration
-    : IDENTIFIER '[' ']' list_initializer
-    | IDENTIFIER '[' index ']' list_initializer      // int array[10];
-	| IDENTIFIER '[' index ']'
+    : IDENTIFIER '[' ']' list_initializer 		{$$ = array_declaration($1, 0, $3)}
+    | IDENTIFIER '[' index ']' list_initializer     	{$$ = array_declaration($1, $2, $3)}
+	| IDENTIFIER '[' index ']'			{$$ = array_declaration($1, $2, NULL)} //not sure
     ;
 
 list_initializer
@@ -157,14 +169,18 @@ pointer
     ;
 
 cast
-	: r_value
-	| '(' typechain ')' cast
+	: r_value			{ $$ = cast(S1, NULL, NULL)}
+	| '(' typechain ')' cast	{ $$ = cast(NULL, $2, $4)}
 	;
+
+
 
 args_list
     : args_list ',' cast
 	| cast
     ;
+
+
 
 Body
 	: '{' ComplexBody '}'
@@ -195,12 +211,13 @@ Statement
 	;
 
 literal
-    : CONSTANT
-    | INTEGER_CONSTANT
-	| FLOAT_CONSTANT
-	| CHAR
-	| STRING_LITERAL
+    : CONSTANT			{$$ = literal($1, 0, '', NULL)}
+    | INTEGER_CONSTANT		{$$ = literal($1, 0, '', NULL)}
+	| FLOAT_CONSTANT	{$$ = literal(0, $1 , '', NULL)}
+	| CHAR			{$$ = literal(0, 0, $1, NULL)}
+	| STRING_LITERAL	{$$ = literal($1, 0, '', $1)}
     ;
+
 
 Expression
 	: l_value assignment
@@ -236,9 +253,10 @@ param_name
 	;
 
 FunctionCall
-    : IDENTIFIER '(' args_list ')'
-	| IDENTIFIER '(' ')'
+    : IDENTIFIER '(' args_list ')'	{ $$ = functioncall($1, $3)}
+	| IDENTIFIER '(' ')'		{ $$ = functioncall($1, NULL)}
     ;
+
 
 // struct
 StructDef
@@ -251,11 +269,13 @@ StructDef
     ;
 
 StructCall
-	: StructCall DOT field_name
-	| StructCall PTR_OP field_name
-	| field_name DOT field_name
-	| field_name PTR_OP field_name
+	: StructCall DOT field_name		{$$ = StructCall(NULL, $3, $1)}
+	| StructCall PTR_OP field_name		{$$ = StructCall(NULL, $3, $1)}
+	| field_name DOT field_name		{$$ = StructCall($1, $3, NULL)}
+	| field_name PTR_OP field_name		{$$ = StructCall($1, $3, NULL)}
 	;
+
+
 
 field_list
     : field ';' field_list
@@ -327,25 +347,30 @@ inc_and_dec
 	;
 
 l_value
-	: pointer field_name
-	| field_name
-	| pointer StructCall
-	| StructCall
+	: pointer field_name			{$$ = l_value($1, $2, NULL)}
+	| field_name				{$$ = l_value(NULL, $1, NULL)}
+	| pointer StructCall			{$$ = l_value($1, "", $2)}
+	| StructCall				{$$ = l_value(NULL, NULL, $1)}
 	;
+
+
 
 r_value
-	: value
-	| NULL_
-	| math_expr
-	| logic_expr
+	: value			{$$ = r_value($1, NULL, NULL, NULL)}
+	| NULL_			{$$ = r_value(NULL, $1, NULL, NULL)}
+	| math_expr		{$$ = r_value(NULL, NULL,$1,  NULL)}
+	| logic_expr		{$$ = r_value(NULL, NULL,NULL, $1)}
 	;
 
+
+
 value
-	: literal
-    | l_value
-    | '&' l_value                        // address
-    | FunctionCall
+	: literal		{$$ = value(NULL, '', $1, NULL)}
+    | l_value			{$$ = value($1, NULL, NULL, NULL)}
+    | '&' l_value   		{$$ = value(NULL, $1, NULL, NULL)} // address
+    | FunctionCall		{$$ = value(NULL, '', NULL, $1)}
 	;
+
 
 short_math
 	: ADD_ASSIGN r_value
