@@ -186,6 +186,7 @@ count_literal
 
 Expression
 	: l_value assignment
+	| l_value short_math
 	| inc_and_dec
 	;
 
@@ -299,14 +300,6 @@ for_actions
 	;
 
 // math
-//short_math
-//	: IDENTIFIER INC_OP
-//	| IDENTIFIER DEC_OP
-//	| IDENTIFIER ADD_ASSIGN value
-//	| IDENTIFIER SUB_ASSIGN value
-//	| IDENTIFIER MUL_ASSIGN value
-//	| IDENTIFIER DIV_ASSIGN value
-//
 
 inc_and_dec
 	: INC_OP l_value
@@ -338,12 +331,11 @@ value
 	;
 
 short_math
-	:  INC_OP
-	|  DEC_OP
-	|  ADD_ASSIGN value
-	|  SUB_ASSIGN value
-	|  MUL_ASSIGN value
-	|  DIV_ASSIGN value
+	: ADD_ASSIGN r_value
+	| SUB_ASSIGN r_value
+	| MUL_ASSIGN r_value
+	| DIV_ASSIGN r_value
+	;
 
 math_expr
  	: '('math_expr')'
